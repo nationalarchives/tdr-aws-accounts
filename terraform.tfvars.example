@@ -1,0 +1,3 @@
+# copy this file and rename to terraform.tfvars
+# replace with the AWS account number for the management environment
+tdr_account_number = "XXXXXXXXXXXX"
