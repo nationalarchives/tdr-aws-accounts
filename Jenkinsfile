@@ -78,7 +78,6 @@ def getStageFromBranch() {
 
     def branchToStageMap = [
             "origin/intg": "intg",
-            "origin/staging": "staging",
             "origin/prod": "prod"
     ]
 
@@ -89,7 +88,6 @@ def getAccountNumberFromBranch() {
 
     def branchToAccountMap = [
             "origin/intg": env.INTG_ACCOUNT,
-            "origin/staging": env.STAGING_ACCOUNT,
             "origin/prod": env.PROD_ACCOUNT
     ]
 
