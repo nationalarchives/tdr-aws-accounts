@@ -77,7 +77,7 @@ pipeline {
 def getStageFromBranch() {
 
     def branchToStageMap = [
-            "origin/intg": "intg",
+            "origin/master": "intg",
             "origin/prod": "prod"
     ]
 
@@ -87,7 +87,7 @@ def getStageFromBranch() {
 def getAccountNumberFromBranch() {
 
     def branchToAccountMap = [
-            "origin/intg": env.INTG_ACCOUNT,
+            "origin/master": env.INTG_ACCOUNT,
             "origin/prod": env.PROD_ACCOUNT
     ]
 
