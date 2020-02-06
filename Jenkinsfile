@@ -2,15 +2,15 @@ pipeline {
     agent {
         label "master"
     }
-    environment {
-        stage = getStageFromBranch()
+    parameters {
+        choice(name: "STAGE", choices: ["intg", "prod"], description: "AWS account being configured")
     }
     stages {
         stage('Run Terraform build') {
             agent {
                 ecs {
                     inheritFrom 'terraform'
-                    taskrole "arn:aws:iam::${env.MANAGEMENT_ACCOUNT}:role/TDRTerraformAssumeRole${env.stage.capitalize()}"
+                    taskrole "arn:aws:iam::${env.MANAGEMENT_ACCOUNT}:role/TDRTerraformAssumeRole${params.STAGE.capitalize()}"
                 }
             }
             environment {
@@ -25,8 +25,8 @@ pipeline {
                         echo 'Initializing Terraform...'
                         sh 'terraform init'
                         //If Terraform workspace exists continue
-                        sh "terraform workspace new ${env.stage} || true"
-                        sh "terraform workspace select ${env.stage}"
+                        sh "terraform workspace new ${params.STAGE} || true"
+                        sh "terraform workspace select ${params.STAGE}"
                         sh 'terraform workspace list'
                     }
                 }
@@ -36,7 +36,7 @@ pipeline {
                         sh 'terraform plan'
                         slackSend(
                                 color: 'good',
-                                message: "Terraform plan complete for ${env.stage} TDR environment. View here for plan: https://jenkins.tdr-management.nationalarchives.gov.uk/job/${JOB_NAME}/${BUILD_NUMBER}/console",
+                                message: "Terraform plan complete for ${params.STAGE.capitalize()} TDR environment. View here for plan: https://jenkins.tdr-management.nationalarchives.gov.uk/job/${JOB_NAME}/${BUILD_NUMBER}/console",
                                 channel: '#tdr'
                         )
                     }
@@ -46,9 +46,9 @@ pipeline {
                         echo 'Sending request for approval of Terraform plan...'
                         slackSend(
                                 color: 'good',
-                                message: "Do you approve Terraform deployment for ${env.stage} TDR environment? jenkins.tdr-management.nationalarchives.gov.uk/job/${JOB_NAME}/${BUILD_NUMBER}/input/",
+                                message: "Do you approve Terraform deployment for ${params.STAGE.capitalize()} TDR environment? jenkins.tdr-management.nationalarchives.gov.uk/job/${JOB_NAME}/${BUILD_NUMBER}/input/",
                                 channel: '#tdr')
-                        input "Do you approve deployment to ${env.stage}?"
+                        input "Do you approve deployment to ${params.STAGE.capitalize()}?"
                     }
                 }
                 stage('Apply Terraform changes') {
@@ -58,7 +58,7 @@ pipeline {
                         echo 'Changes applied'
                         slackSend(
                                 color: 'good',
-                                message: "Deployment complete for ${env.stage} TDR environment",
+                                message: "Deployment complete for ${params.STAGE.capitalize()} TDR environment",
                                 channel: '#tdr'
                         )
                     }
@@ -74,22 +74,11 @@ pipeline {
     }
 }
 
-def getStageFromBranch() {
-
-    def branchToStageMap = [
-            "origin/master": "intg",
-            "origin/prod": "prod"
+def getAccountNumberFromStage() {
+    def stageToAccountMap = [
+            "intg": env.INTG_ACCOUNT,
+            "prod": env.PROD_ACCOUNT
     ]
 
-    return branchToStageMap.get(env.GIT_BRANCH)
-}
-
-def getAccountNumberFromBranch() {
-
-    def branchToAccountMap = [
-            "origin/master": env.INTG_ACCOUNT,
-            "origin/prod": env.PROD_ACCOUNT
-    ]
-
-    return branchToAccountMap.get(env.GIT_BRANCH)
+    return stageToAccountMap.get(params.STAGE)
 }
