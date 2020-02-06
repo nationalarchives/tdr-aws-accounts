@@ -32,5 +32,15 @@ terraform plan
 terraform apply
 ```
 
+### Deploy to Dev DRI (TDR Prototype) environment
+* Deploy from a developer laptop
+* Use AWS credentials from the TDR Manager account
+* Update the AWS account number in your terraform.tfvars to the sandbox account
+```
+terraform workspace select ddri
+terraform plan
+terraform apply
+```
+
 ### Deploy to Integration and Production environments
 * Deploy using Jenkins pipeline

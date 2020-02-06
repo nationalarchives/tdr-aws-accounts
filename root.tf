@@ -1,12 +1,13 @@
 locals {
   environment = terraform.workspace
-  assume_role = local.environment == "mgmt" || local.environment == "sbox"? "arn:aws:iam::${var.tdr_account_number}:role/IAM_Admin_Role" : "arn:aws:iam::${var.tdr_account_number}:role/TDRTerraformRole${title(local.environment)}"
+  assume_role = local.environment == "mgmt" || local.environment == "sbox" || local.environment == "ddri" ? "arn:aws:iam::${var.tdr_account_number}:role/IAM_Admin_Role" : "arn:aws:iam::${var.tdr_account_number}:role/TDRTerraformRole${title(local.environment)}"
   environment_full_name_map = {
     "mgmt"    = "management",
     "intg"    = "integration",
     "staging" = "staging",
     "prod"    = "production",
-    "sbox"    = "sandbox"
+    "sbox"    = "sandbox",
+    "prot"    = "prototype"
   }
   common_tags = map(
     "Environment", local.environment,
