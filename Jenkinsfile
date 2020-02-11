@@ -65,6 +65,24 @@ pipeline {
                 }
             }
         }
+        stage("Python") {
+            agent {
+                ecs {
+                    inheritFrom "terraform"
+                    taskrole "arn:aws:iam::${env.MANAGEMENT_ACCOUNT}:role/TDRTerraformAssumeRole${params.STAGE.capitalize()}"
+                }
+            }
+            steps {
+                script {
+                    sh "python python/delete-default-vpcs.py"
+                    slackSend(
+                            color: "good",
+                            message: "${params.STAGE.capitalize()} default VPCs deleted in all regions",
+                            channel: "#tdr"
+                    )
+                }
+            }
+        }
     }
     post {
         always {

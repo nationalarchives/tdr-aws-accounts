@@ -1,14 +1,22 @@
 # TDR AWS Accounts
 
-This repository contains code to configure AWS accounts to support the TDR infrastructure and application
+This repository contains code to configure AWS accounts to support the TDR infrastructure and application.
+There are two scripting languages used:
+* Terraform
+* Python
+
+Code using each language is deployed separately, see sections below.
 
 ## Account level configurations
-* Sets IAM password policy to comply with CIS AWS Foundation Benchmark
+* Sets IAM password policy to comply with CIS AWS Foundation Benchmark (terraform)
+* Deletes default VPCs in all regions (python)
 
-## USAGE
+## USAGE - TERRAFORM
 
 ### Install Git Secrets
 * Install AWS [git-secrets](https://github.com/awslabs/git-secrets) to prevent accidentally committing sensitive AWS data
+
+## TERRAFORM
 
 ### Deploy to Management environment
 * Deploy from a developer laptop
@@ -44,3 +52,27 @@ terraform apply
 
 ### Deploy to Integration and Production environments
 * Deploy using Jenkins pipeline
+
+## USAGE - PYTHON
+
+### Deploy to Management environment
+* Install Python 3.7 or later to your laptop
+* Install AWS CLI and 
+* Create a virtual environment
+```
+virtualenv -p python3 /Users/YOUR-USERNAME/venv
+```
+
+* Activate virtual environment
+```
+source /Users/YOUR-USERNAME/venv/python3/bin/activate
+```
+* Install dependencies
+```
+pip install boto3
+```
+* Delete Default VPCs
+```
+python delete-default-vpcs --dry_run
+python delete-default-vpcs
+```
