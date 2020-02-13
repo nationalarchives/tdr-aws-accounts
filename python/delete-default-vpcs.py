@@ -6,6 +6,7 @@ import sys
 import time
 import json
 import argparse
+from sessions import get_session
 
 from botocore.exceptions import ClientError
 from datetime import datetime
@@ -24,7 +25,11 @@ class iam:
         self.profile = profile
         self.dry_run = dry_run
 
-        self.session = boto3.session.Session(profile_name=self.profile)
+        # COMMENT OUT TO RUN FROM LAPTOP INSTEAD OF JENKINS
+        self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
+        # UNCOMMENT TO RUN FROM LAPTOP INSTEAD OF JENKINS
+        #self.session = boto3.session.Session(profile_name=self.profile)
+
         self.client = self.session.client('iam')
 
         aliases = self.client.list_account_aliases()['AccountAliases']
@@ -38,7 +43,11 @@ class ec2:
         self.profile = profile
         self.dry_run = dry_run
 
-        self.session = boto3.session.Session(profile_name=self.profile)
+        # COMMENT OUT TO RUN FROM LAPTOP INSTEAD OF JENKINS
+        self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
+        # UNCOMMENT TO RUN FROM LAPTOP INSTEAD OF JENKINS
+        #self.session = boto3.session.Session(profile_name=self.profile)
+
         self.client = self.session.client('ec2')
 
         print("Retrieving all AWS regions")
