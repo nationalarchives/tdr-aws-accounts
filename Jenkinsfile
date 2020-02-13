@@ -68,7 +68,7 @@ pipeline {
         stage("Python") {
             agent {
                 ecs {
-                    inheritFrom "terraform"
+                    inheritFrom "aws"
                     taskrole "arn:aws:iam::${env.MANAGEMENT_ACCOUNT}:role/TDRTerraformAssumeRole${params.STAGE.capitalize()}"
                 }
             }
