@@ -74,7 +74,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "python3 python/delete-default-vpcs.py"
+                    sh "python3 python/delete-default-vpcs.py --account_number=${params.STAGE.capitalize()}"
                     slackSend(
                             color: "good",
                             message: "${params.STAGE.capitalize()} default VPCs deleted in all regions",

@@ -20,7 +20,7 @@ def json_serial(obj):
     raise TypeError("Type not serializable")
 
 class iam:
-    def __init__(self, profile, dry_run):
+    def __init__(self, profile, account_number, dry_run):
 
         self.profile = profile
         self.dry_run = dry_run
@@ -38,7 +38,7 @@ class iam:
         print('Deleting VPCs in Account %s' % aliases[0])
 
 class ec2:
-    def __init__(self, profile, dry_run):
+    def __init__(self, profile, account_number, dry_run):
 
         self.profile = profile
         self.dry_run = dry_run
@@ -116,6 +116,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Delete Default VPCs")
     parser.add_argument('--profile', default='default')
+    parser.add_argument('--account_number')
     parser.add_argument('--dry_run', action='count')
 
     args = parser.parse_args()
