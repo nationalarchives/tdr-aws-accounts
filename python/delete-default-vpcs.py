@@ -23,6 +23,7 @@ class iam:
     def __init__(self, profile, account_number, dry_run):
 
         self.profile = profile
+        self.account_number = account_number
         self.dry_run = dry_run
 
         # COMMENT OUT TO RUN FROM LAPTOP INSTEAD OF JENKINS
@@ -41,6 +42,7 @@ class ec2:
     def __init__(self, profile, account_number, dry_run):
 
         self.profile = profile
+        self.account_number = account_number
         self.dry_run = dry_run
 
         # COMMENT OUT TO RUN FROM LAPTOP INSTEAD OF JENKINS
@@ -122,7 +124,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     profile = args.profile
+    account_number = args.account_number
     dry_run = args.dry_run
 
-    iam(profile, dry_run)
-    ec2(profile, dry_run)
+    iam(profile, account_number, dry_run)
+    ec2(profile, account_number, dry_run)
