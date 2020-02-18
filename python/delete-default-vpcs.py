@@ -20,16 +20,16 @@ def json_serial(obj):
     raise TypeError("Type not serializable")
 
 class iam:
-    def __init__(self, profile, account_number, dry_run):
+    def __init__(self, profile, account_number, stage, deployment_type, dry_run):
 
         self.profile = profile
         self.account_number = account_number
         self.dry_run = dry_run
 
-        # COMMENT OUT TO RUN FROM LAPTOP INSTEAD OF JENKINS
-        self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
-        # UNCOMMENT TO RUN FROM LAPTOP INSTEAD OF JENKINS
-        #self.session = boto3.session.Session(profile_name=self.profile)
+        if deployment_type is "jenkins":
+            self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
+        else:
+            self.session = boto3.session.Session(profile_name=self.profile)
 
         self.client = self.session.client('iam')
 
@@ -39,17 +39,17 @@ class iam:
         print('Deleting VPCs in Account %s' % aliases[0])
 
 class ec2:
-    def __init__(self, profile, account_number, dry_run):
+    def __init__(self, profile, account_number, stage, deployment_type, dry_run):
 
         self.profile = profile
         self.account_number = account_number
         self.dry_run = dry_run
 
-        # COMMENT OUT TO RUN FROM LAPTOP INSTEAD OF JENKINS
-        self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
-        # UNCOMMENT TO RUN FROM LAPTOP INSTEAD OF JENKINS
-        #self.session = boto3.session.Session(profile_name=self.profile)
-
+        if deployment_type is "jenkins":
+            self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
+        else:
+            self.session = boto3.session.Session(profile_name=self.profile)
+        
         self.client = self.session.client('ec2')
 
         print("Retrieving all AWS regions")
@@ -119,13 +119,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Delete Default VPCs")
     parser.add_argument('--profile', default='default')
     parser.add_argument('--account_number')
+    parser.add_argument('--stage')
+    parser.add_argument('--deployment_type', default='manual')
     parser.add_argument('--dry_run', action='count')
 
     args = parser.parse_args()
 
     profile = args.profile
     account_number = args.account_number
+    stage = args.stage
+    deployment_type = args.deployment_type
     dry_run = args.dry_run
 
-    iam(profile, account_number, dry_run)
-    ec2(profile, account_number, dry_run)
+    iam(profile, account_number, stage, deployment_type, dry_run)
+    ec2(profile, account_number, stage, deployment_type, dry_run)
