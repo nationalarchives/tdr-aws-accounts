@@ -26,7 +26,7 @@ class iam:
         self.account_number = account_number
         self.dry_run = dry_run
 
-        if deployment_type is "jenkins":
+        if deployment_type == "jenkins":
             self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
@@ -45,11 +45,11 @@ class ec2:
         self.account_number = account_number
         self.dry_run = dry_run
 
-        if deployment_type is "jenkins":
+        if deployment_type == "jenkins":
             self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
-        
+
         self.client = self.session.client('ec2')
 
         print("Retrieving all AWS regions")
