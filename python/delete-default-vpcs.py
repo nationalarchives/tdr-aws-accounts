@@ -28,7 +28,7 @@ class iam:
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.client = boto3.resource('iam')
+            self.client = boto3('iam')
             #self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
@@ -48,7 +48,7 @@ class ec2:
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.client = boto3.resource('ec2')
+            self.client = boto3('ec2')
             #self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
@@ -59,8 +59,8 @@ class ec2:
         #print('Regions:', regions)
 
         for region in regions:
-
-            self.client = self.session.client('ec2', region_name=region['RegionName'])
+            self.client = self.client(region_name=region['RegionName'])
+            #self.client = self.session.client('ec2', region_name=region['RegionName'])
             print("Searching for ec2 resources in region %s" % region['RegionName'])
             igs = self.client.describe_internet_gateways()['InternetGateways']
             vpcs = self.client.describe_vpcs()['Vpcs']
