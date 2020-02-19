@@ -28,11 +28,11 @@ class iam:
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
+            self.client = self.client('iam')
+            #self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
-
-        self.client = self.session.client('iam')
+            self.client = self.session.client('iam')
 
         aliases = self.client.list_account_aliases()['AccountAliases']
         #print(json.dumps(aliases, sort_keys=True, indent=2, default=json_serial))
@@ -48,11 +48,11 @@ class ec2:
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
+            self.client = self.client('ec2')
+            #self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
-
-        self.client = self.session.client('ec2')
+            self.client = self.session.client('ec2')
 
         print("Retrieving all AWS regions")
         regions = self.client.describe_regions()['Regions']
