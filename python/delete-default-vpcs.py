@@ -28,7 +28,7 @@ class iam:
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.client = boto3('iam')
+            self.client = boto3.resource('iam')
             #self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
@@ -48,7 +48,7 @@ class ec2:
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.client = boto3('ec2')
+            self.client = boto3.resource('ec2')
             #self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
