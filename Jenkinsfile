@@ -74,7 +74,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "python3 python/delete-default-vpcs.py --stage=${params.STAGE} --deployment_type=jenkins"
+                    sh "python3 python/delete-default-vpcs.py --account_number=${getAccountNumberFromStage()} --stage=${params.STAGE} --deployment_type=jenkins"
                     slackSend(
                             color: "good",
                             message: "${params.STAGE.capitalize()} default VPCs deleted in all regions",
