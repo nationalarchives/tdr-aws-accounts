@@ -20,14 +20,15 @@ def json_serial(obj):
     raise TypeError("Type not serializable")
 
 class iam:
-    def __init__(self, profile, account_number, stage, deployment_type, dry_run):
+    def __init__(self, profile, mgmt_account_number, account_number, stage, deployment_type, dry_run):
 
         self.profile = profile
+        self.mgmt_account_number = mgmt_account_number
         self.account_number = account_number
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
+            self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
 
@@ -39,14 +40,15 @@ class iam:
         print('Deleting VPCs in Account %s' % aliases[0])
 
 class ec2:
-    def __init__(self, profile, account_number, stage, deployment_type, dry_run):
+    def __init__(self, profile, mgmt_account_number, account_number, stage, deployment_type, dry_run):
 
         self.profile = profile
+        self.mgmt_account_number = mgmt_account_number
         self.account_number = account_number
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.session = get_session(account_number, "TDRTerraformAssumeRole" + stage.capitalize())
+            self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
 
@@ -118,6 +120,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Delete Default VPCs")
     parser.add_argument('--profile', default='default')
+    parser.add_argument('--mgmt_account_number')
     parser.add_argument('--account_number')
     parser.add_argument('--stage')
     parser.add_argument('--deployment_type', default='manual')
@@ -126,10 +129,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     profile = args.profile
+    mgmt_account_number = args.mgmt_account_number
     account_number = args.account_number
     stage = args.stage
     deployment_type = args.deployment_type
     dry_run = args.dry_run
 
-    iam(profile, account_number, stage, deployment_type, dry_run)
-    ec2(profile, account_number, stage, deployment_type, dry_run)
+    iam(profile, mgmt_account_number, account_number, stage, deployment_type, dry_run)
+    ec2(profile, mgmt_account_number, account_number, stage, deployment_type, dry_run)
