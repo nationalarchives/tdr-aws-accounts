@@ -28,11 +28,12 @@ class iam:
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.client = boto3.resource('iam')
+            self.session = boto3.session.Session()
             #self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
-            self.client = self.session.client('iam')
+
+        self.client = self.session.client('iam')
 
         aliases = self.client.list_account_aliases()['AccountAliases']
         #print(json.dumps(aliases, sort_keys=True, indent=2, default=json_serial))
@@ -48,19 +49,19 @@ class ec2:
         self.dry_run = dry_run
 
         if deployment_type == "jenkins":
-            self.client = boto3.resource('ec2')
+            self.session = boto3.session.Session()
             #self.session = get_session(mgmt_account_number, "TDRTerraformAssumeRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
-            self.client = self.session.client('ec2')
+
+        self.client = self.session.client('ec2')
 
         print("Retrieving all AWS regions")
         regions = self.client.describe_regions()['Regions']
         #print('Regions:', regions)
 
         for region in regions:
-            self.client = self.client(region_name=region['RegionName'])
-            #self.client = self.session.client('ec2', region_name=region['RegionName'])
+            self.client = self.session.client('ec2', region_name=region['RegionName'])
             print("Searching for ec2 resources in region %s" % region['RegionName'])
             igs = self.client.describe_internet_gateways()['InternetGateways']
             vpcs = self.client.describe_vpcs()['Vpcs']
