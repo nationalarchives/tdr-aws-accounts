@@ -6,6 +6,7 @@ import sys
 import time
 import json
 import argparse
+from sessions import get_session
 
 from botocore.exceptions import ClientError
 from datetime import datetime
@@ -19,12 +20,17 @@ def json_serial(obj):
     raise TypeError("Type not serializable")
 
 class iam:
-    def __init__(self, profile, dry_run):
+    def __init__(self, profile, account_number, stage, deployment_type, dry_run):
 
         self.profile = profile
+        self.account_number = account_number
         self.dry_run = dry_run
 
-        self.session = boto3.session.Session(profile_name=self.profile)
+        if deployment_type == "jenkins":
+            self.session = get_session(account_number, "TDRTerraformRole" + stage.capitalize())
+        else:
+            self.session = boto3.session.Session(profile_name=self.profile)
+
         self.client = self.session.client('iam')
 
         aliases = self.client.list_account_aliases()['AccountAliases']
@@ -33,12 +39,17 @@ class iam:
         print('Deleting VPCs in Account %s' % aliases[0])
 
 class ec2:
-    def __init__(self, profile, dry_run):
+    def __init__(self, profile, account_number, stage, deployment_type, dry_run):
 
         self.profile = profile
+        self.account_number = account_number
         self.dry_run = dry_run
 
-        self.session = boto3.session.Session(profile_name=self.profile)
+        if deployment_type == "jenkins":
+            self.session = get_session(account_number, "TDRTerraformRole" + stage.capitalize())
+        else:
+            self.session = boto3.session.Session(profile_name=self.profile)
+
         self.client = self.session.client('ec2')
 
         print("Retrieving all AWS regions")
@@ -46,7 +57,6 @@ class ec2:
         #print('Regions:', regions)
 
         for region in regions:
-
             self.client = self.session.client('ec2', region_name=region['RegionName'])
             print("Searching for ec2 resources in region %s" % region['RegionName'])
             igs = self.client.describe_internet_gateways()['InternetGateways']
@@ -107,12 +117,18 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Delete Default VPCs")
     parser.add_argument('--profile', default='default')
+    parser.add_argument('--account_number')
+    parser.add_argument('--stage')
+    parser.add_argument('--deployment_type', default='manual')
     parser.add_argument('--dry_run', action='count')
 
     args = parser.parse_args()
 
     profile = args.profile
+    account_number = args.account_number
+    stage = args.stage
+    deployment_type = args.deployment_type
     dry_run = args.dry_run
 
-    iam(profile, dry_run)
-    ec2(profile, dry_run)
+    iam(profile, account_number, stage, deployment_type, dry_run)
+    ec2(profile, account_number, stage, deployment_type, dry_run)

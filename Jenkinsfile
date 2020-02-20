@@ -68,13 +68,13 @@ pipeline {
         stage("Python") {
             agent {
                 ecs {
-                    inheritFrom "terraform"
+                    inheritFrom "aws"
                     taskrole "arn:aws:iam::${env.MANAGEMENT_ACCOUNT}:role/TDRTerraformAssumeRole${params.STAGE.capitalize()}"
                 }
             }
             steps {
                 script {
-                    sh "python python/delete-default-vpcs.py"
+                    sh "python3 python/delete-default-vpcs.py --account_number=${getAccountNumberFromStage()} --stage=${params.STAGE} --deployment_type=jenkins"
                     slackSend(
                             color: "good",
                             message: "${params.STAGE.capitalize()} default VPCs deleted in all regions",
