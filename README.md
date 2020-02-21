@@ -9,6 +9,7 @@ Code using each language is deployed separately, see sections below.
 
 ## Account level configurations
 * Sets IAM password policy to comply with CIS AWS Foundation Benchmark (terraform)
+* Configures GuardDuty and enables in all regions (terraform)
 * Deletes default VPCs in all regions (python)
 
 ## USAGE - TERRAFORM
@@ -50,7 +51,7 @@ terraform plan
 terraform apply
 ```
 
-### Deploy to Integration and Production environments
+### Deploy Terraform to Integration and Production environments
 * Deploy using Jenkins pipeline
 
 ## USAGE - PYTHON
@@ -76,3 +77,6 @@ pip install boto3
 python delete-default-vpcs --dry_run
 python delete-default-vpcs
 ```
+
+### Deploy Python to Integration and Production environments
+* Deploy using Jenkins pipeline
