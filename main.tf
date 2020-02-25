@@ -3,7 +3,7 @@ module "iam" {
 }
 
 module "guardduty-s3" {
-  source      = "../tdr-terraform-modules/s3"
+  source      = "./tdr-terraform-modules/s3"
   project     = "tdr"
   function    = "guardduty"
   common_tags = local.common_tags
