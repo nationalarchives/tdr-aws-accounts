@@ -19,7 +19,7 @@ module "ses-eu-west-1" {
   source                = "./tdr-terraform-modules/ses"
   project               = var.project
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
-  hosted_zone_id = module.route_53_zone.hosted_zone_id
+  hosted_zone_id        = module.route_53_zone.hosted_zone_id
   providers = {
     aws = aws.eu-west-1
   }
