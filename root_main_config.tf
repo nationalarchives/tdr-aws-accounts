@@ -10,7 +10,6 @@ module "config-eu-west-2" {
   include_global_resource_types = true
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   common_tags                   = local.common_tags
 }
 
@@ -19,7 +18,6 @@ module "config-ap-northeast-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -32,7 +30,6 @@ module "config-ap-northeast-2" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -45,7 +42,6 @@ module "config-ap-south-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -58,7 +54,6 @@ module "config-ap-southeast-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -71,7 +66,6 @@ module "config-ap-southeast-2" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -84,7 +78,6 @@ module "config-ca-central-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -97,7 +90,6 @@ module "config-eu-central-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -110,7 +102,6 @@ module "config-eu-north-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -123,7 +114,6 @@ module "config-eu-west-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -136,7 +126,6 @@ module "config-eu-west-3" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -149,7 +138,6 @@ module "config-sa-east-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -162,7 +150,6 @@ module "config-us-east-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -175,7 +162,6 @@ module "config-us-east-2" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -188,7 +174,6 @@ module "config-us-west-1" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
@@ -201,7 +186,6 @@ module "config-us-west-2" {
   include_global_resource_types = false
   bucket_id                     = module.config-s3.s3_bucket_id
   project                       = var.project
-  environment_full_name         = lookup(local.environment_full_name_map, local.environment)
   primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependendency
   common_tags                   = local.common_tags
   providers = {
