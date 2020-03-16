@@ -3,7 +3,7 @@ module "iam" {
   aws_account_level = true
 }
 
-# if the hosted zone has already been created manuallly, before applying terraform, import to state file using e.g.:
+# if the hosted zone has already been created manually, before applying terraform, import to state file using e.g.:
 # terraform import module.route_53_zone.aws_route53_zone.hosted_zone Z4KAPRWWNC7JR
 # terraform import module.route_53_zone.aws_route53_record.hosted_zone_ns Z4KAPRWWNC7JR_tdr-management.nationalarchives.gov.uk_NS_tdr-management
 

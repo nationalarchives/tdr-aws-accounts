@@ -23,7 +23,7 @@ pipeline {
                 stage('Set up Terraform workspace') {
                     steps {
                         echo 'Initializing Terraform...'
-                        sh "git clone --single-branch --branch guardduty-module https://github.com/nationalarchives/tdr-terraform-modules.git"
+                        sh "git clone https://github.com/nationalarchives/tdr-terraform-modules.git"
                         sh 'terraform init'
                         //If Terraform workspace exists continue
                         sh "terraform workspace new ${params.STAGE} || true"
