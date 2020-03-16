@@ -3,7 +3,7 @@ pipeline {
         label "master"
     }
     parameters {
-        choice(name: "STAGE", choices: ["intg", "prod"], description: "AWS account being configured")
+        choice(name: "STAGE", choices: ["intg", "staging", "prod"], description: "AWS account being configured")
     }
     stages {
         stage('Run Terraform build') {
@@ -96,6 +96,7 @@ pipeline {
 def getAccountNumberFromStage() {
     def stageToAccountMap = [
             "intg": env.INTG_ACCOUNT,
+            "staging": env.STAGING_ACCOUNT,
             "prod": env.PROD_ACCOUNT
     ]
 
