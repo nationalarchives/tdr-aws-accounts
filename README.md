@@ -28,8 +28,22 @@ Code using each language is deployed separately, see sections below.
 terraform init
 terraform workspace select mgmt
 terraform plan
+```
+* if the Route53 hosted zone has been created manually, before applying terraform, e.g.:
+```
+terraform import module.route_53_zone.aws_route53_zone.hosted_zone Z4KAPRWWNC7JR
+terraform import module.route_53_zone.aws_route53_record.hosted_zone_ns Z4KAPRWWNC7JR_tdr-management.nationalarchives.gov.uk_NS_tdr-management
+```
+* replace the dummy ZoneID  with the actual one
+* once any manually created items have been imported:
+```
+terraform plan
 terraform apply
 ```
+
+### Delegation of hosted zone from corporate DNS
+* ensure that any newly created hosted zone is delegated by corporate DNS
+* this will be required before SES domain can be verified
 
 ### Deploy to Sandbox environment
 * Deploy from a developer laptop

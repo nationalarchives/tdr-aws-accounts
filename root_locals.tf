@@ -16,4 +16,5 @@ locals {
     "CostCentre", data.aws_ssm_parameter.cost_centre.value,
   )
   region = "eu-west-2"
+  ip_set = data.aws_ssm_parameter.trusted_ips.value
 }
