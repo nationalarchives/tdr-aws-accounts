@@ -1,4 +1,3 @@
-/*
 module "config-s3" {
   source      = "./tdr-terraform-modules/s3"
   project     = var.project
@@ -193,4 +192,3 @@ module "config-us-west-2" {
     aws = aws.us-west-2
   }
 }
-*/
