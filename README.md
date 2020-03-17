@@ -29,7 +29,8 @@ terraform init
 terraform workspace select mgmt
 terraform plan
 ```
-* if the Route53 hosted zone has been created manually, before applying terraform, e.g.:
+* if the Route53 hosted zone has been created manually, uncomment the name server block in terraform modules
+* then run Terraform commands as below
 ```
 terraform import module.route_53_zone.aws_route53_zone.hosted_zone Z4KAPRWWNC7JR
 terraform import module.route_53_zone.aws_route53_record.hosted_zone_ns Z4KAPRWWNC7JR_tdr-management.nationalarchives.gov.uk_NS_tdr-management
@@ -67,6 +68,10 @@ terraform apply
 
 ### Deploy Terraform to Integration and Production environments
 * Deploy using Jenkins pipeline
+* The last stage of the Terraform build (SES verification) may time out
+* If so, stop the build
+* Delegate from corporate DNS to the AWS hosted zone name servers
+* Then rerun the pipeline
 
 ## USAGE - PYTHON
 
@@ -77,7 +82,6 @@ terraform apply
 ```
 virtualenv -p python3 /Users/YOUR-USERNAME/venv
 ```
-
 * Activate virtual environment
 ```
 source /Users/YOUR-USERNAME/venv/python3/bin/activate
