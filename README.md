@@ -29,7 +29,7 @@ terraform init
 terraform workspace select mgmt
 terraform plan
 ```
-* if the Route53 hosted zone has been created manually, uncomment the name server block in terraform modules
+* if the Route53 hosted zone has been created manually, ensure the environment is included in the name server block conditional [here](https://github.com/nationalarchives/tdr-terraform-modules/blob/master/route53/main.tf)
 * then run Terraform commands as below
 ```
 terraform import module.route_53_zone.aws_route53_zone.hosted_zone Z4KAPRWWNC7JR
