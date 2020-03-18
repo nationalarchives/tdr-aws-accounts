@@ -13,8 +13,8 @@ locals {
     "Environment", local.environment,
     "Owner", "TDR",
     "Terraform", true,
-    "CostCentre", data.aws_ssm_parameter.cost_centre.value,
+    "CostCentre", module.global_parameters.cost_centre,
   )
   region = "eu-west-2"
-  ip_set = data.aws_ssm_parameter.trusted_ips.value
+  ip_set = module.global_parameters.trusted_ips
 }
