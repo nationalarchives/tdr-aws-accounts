@@ -68,10 +68,9 @@ terraform apply
 
 ### Deploy Terraform to Integration and Production environments
 * Deploy using Jenkins pipeline
-* The last stage of the Terraform build (SES verification) may time out
-* If so, stop the build
-* Delegate from corporate DNS to the AWS hosted zone name servers
-* Then rerun the pipeline
+* If this is the first time in a new environment, request DNS delegation for the hosted zone
+* Once in place, modify the conditional statements [here](https://github.com/nationalarchives/tdr-terraform-modules/blob/master/ses/main.tf)
+* then rerun the pipeline for that environment 
 
 ## USAGE - PYTHON
 
