@@ -29,7 +29,9 @@ terraform init
 terraform workspace select mgmt
 terraform plan
 ```
-* if the Route53 hosted zone has been created manually, ensure the environment is included in the name server block conditional [here](https://github.com/nationalarchives/tdr-terraform-modules/blob/master/route53/main.tf)
+
+### Manually created hosted zones
+* if the Route53 hosted zone has been created manually, set var.manual_creation = true in root_main.tf for that environment
 * then run Terraform commands as below
 ```
 terraform import module.route_53_zone.aws_route53_zone.hosted_zone Z4KAPRWWNC7JR
@@ -41,10 +43,6 @@ terraform import module.route_53_zone.aws_route53_record.hosted_zone_ns Z4KAPRWW
 terraform plan
 terraform apply
 ```
-
-### Delegation of hosted zone from corporate DNS
-* ensure that any newly created hosted zone is delegated by corporate DNS
-* this will be required before SES domain can be verified
 
 ### Deploy to Sandbox environment
 * Deploy from a developer laptop
@@ -68,8 +66,9 @@ terraform apply
 
 ### Deploy Terraform to Integration and Production environments
 * Deploy using Jenkins pipeline
-* If this is the first time in a new environment, request DNS delegation for the hosted zone
-* Once in place, modify the conditional statements [here](https://github.com/nationalarchives/tdr-terraform-modules/blob/master/ses/main.tf)
+* If this is the first time in a new environment, set var.dns_delegated = false in root_main.tf
+* request DNS delegation for the hosted zone
+* Once in place, set var.dns_delegated = true
 * then rerun the pipeline for that environment 
 
 ## USAGE - PYTHON

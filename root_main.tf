@@ -16,6 +16,7 @@ module "route_53_zone" {
   project               = var.project
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
   common_tags           = local.common_tags
+  manual_creation       = local.environment == "mgmt" || local.environment == "intg" ? true : false
 }
 
 # route53 hosted zone must already have been set up
@@ -24,7 +25,12 @@ module "ses-eu-west-1" {
   project               = var.project
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
   hosted_zone_id        = module.route_53_zone.hosted_zone_id
+  dns_delegated         = local.environment == "prod" ? false : true
   providers = {
     aws = aws.eu-west-1
   }
+}
+
+module "security_hub" {
+  source = "./tdr-terraform-modules/securityhub"
 }
