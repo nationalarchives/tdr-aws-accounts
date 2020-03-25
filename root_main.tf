@@ -25,7 +25,8 @@ module "ses-eu-west-1" {
   project               = var.project
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
   hosted_zone_id        = module.route_53_zone.hosted_zone_id
-  dns_delegated         = local.environment == "xxxx" ? false : true #replace xxxx with workspace for new environment
+  #if building a new environment, uncomment the line below and replace xxxx with new workspace name
+  #dns_delegated         = local.environment == "xxxx" ? false : true
   providers = {
     aws = aws.eu-west-1
   }
