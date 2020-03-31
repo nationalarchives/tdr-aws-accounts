@@ -10,6 +10,8 @@ Code using each language is deployed separately, see sections below.
 ## Account level configurations
 * Sets IAM password policy to comply with CIS AWS Foundation Benchmark (terraform)
 * Configures GuardDuty and enables in all regions (terraform)
+* Turns on Config in all regions (terraform)
+* Configures CloudTrail at AWS account level (terraform)
 * Deletes default VPCs in all regions (python)
 
 ## USAGE - TERRAFORM

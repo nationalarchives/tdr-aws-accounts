@@ -1,5 +1,5 @@
 module "global_parameters" {
-  source            = "./tdr-configurations/terraform"
+  source = "./tdr-configurations/terraform"
 }
 
 module "iam" {
@@ -34,4 +34,28 @@ module "ses-eu-west-1" {
 
 module "security_hub" {
   source = "./tdr-terraform-modules/securityhub"
+}
+
+module "encryption_key" {
+  source      = "./tdr-terraform-modules/kms"
+  project     = var.project
+  environment = local.environment
+  common_tags = local.common_tags
+  function    = "account"
+}
+
+module "cloudtrail_s3" {
+  source        = "./tdr-terraform-modules/s3"
+  project       = var.project
+  function      = "cloudtrail"
+  common_tags   = local.common_tags
+  kms_key_id    = module.encryption_key.kms_alias_arn
+  bucket_policy = "cloudtrail"
+}
+
+module "cloudtrail" {
+  source         = "./tdr-terraform-modules/cloudtrail"
+  project        = var.project
+  common_tags    = local.common_tags
+  s3_bucket_name = module.cloudtrail_s3.s3_bucket_id
 }
