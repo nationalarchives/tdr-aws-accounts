@@ -44,7 +44,7 @@ module "encryption_key" {
   function    = "account"
 }
 
-module "cloudtrail-s3" {
+module "cloudtrail_s3" {
   source        = "./tdr-terraform-modules/s3"
   project       = var.project
   function      = "cloudtrail"
@@ -57,5 +57,5 @@ module "cloudtrail" {
   source         = "./tdr-terraform-modules/cloudtrail"
   project        = var.project
   common_tags    = local.common_tags
-  s3_bucket_name = module.cloudtrail-s3.s3_bucket_id
+  s3_bucket_name = module.cloudtrail_s3.s3_bucket_id
 }
