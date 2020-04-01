@@ -42,6 +42,7 @@ module "encryption_key" {
   environment = local.environment
   common_tags = local.common_tags
   function    = "account"
+  key_policy  = "cloudtrail"
 }
 
 module "cloudtrail_s3" {
@@ -49,8 +50,8 @@ module "cloudtrail_s3" {
   project       = var.project
   function      = "cloudtrail"
   common_tags   = local.common_tags
-  kms_key_id    = module.encryption_key.kms_alias_arn
   bucket_policy = "cloudtrail"
+  access_logs   = false
 }
 
 module "cloudtrail" {
@@ -58,4 +59,5 @@ module "cloudtrail" {
   project        = var.project
   common_tags    = local.common_tags
   s3_bucket_name = module.cloudtrail_s3.s3_bucket_id
+  kms_key_id     = module.encryption_key.kms_alias_arn
 }
