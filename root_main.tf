@@ -27,9 +27,6 @@ module "ses-eu-west-1" {
   hosted_zone_id        = module.route_53_zone.hosted_zone_id
   #if building a new environment, uncomment the line below and replace xxxx with new workspace name
   #dns_delegated         = local.environment == "xxxx" ? false : true
-  providers = {
-    aws = aws.eu-west-1
-  }
 }
 
 module "security_hub" {
@@ -59,5 +56,5 @@ module "cloudtrail" {
   project        = var.project
   common_tags    = local.common_tags
   s3_bucket_name = module.cloudtrail_s3.s3_bucket_id
-  kms_key_id     = module.encryption_key.kms_alias_arn
+  kms_key_id     = module.encryption_key.kms_key_arn
 }

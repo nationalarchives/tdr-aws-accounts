@@ -7,12 +7,17 @@ There are two scripting languages used:
 
 Code using each language is deployed separately, see sections below.
 
-## Account level configurations
-* Sets IAM password policy to comply with CIS AWS Foundation Benchmark (terraform)
-* Configures GuardDuty and enables in all regions (terraform)
-* Turns on Config in all regions (terraform)
-* Configures CloudTrail at AWS account level (terraform)
-* Deletes default VPCs in all regions (python)
+## Account level configurations - Terraform
+* Sets IAM password policy to comply with CIS AWS Foundation Benchmark
+* Configures GuardDuty and enables in all regions
+* Turns on Config in all regions
+* Configures CloudTrail at AWS account level
+* Configures Securty Hub
+* Creates hosted zone
+* Creates Simple Email Service
+
+## Account level configurations - Python
+* Deletes default VPCs in all regions
 
 ## USAGE - TERRAFORM
 
