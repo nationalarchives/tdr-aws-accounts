@@ -58,3 +58,13 @@ module "cloudtrail" {
   s3_bucket_name = module.cloudtrail_s3.s3_bucket_id
   kms_key_id     = module.encryption_key.kms_key_arn
 }
+
+module "log_data_s3" {
+  source         = "./tdr-terraform-modules/s3"
+  apply_resource = local.environment == "mgmt" ? true : false
+  project        = var.project
+  common_tags    = local.common_tags
+  function       = "log-data"
+  access_logs    = false
+  force_destroy  = false
+}
