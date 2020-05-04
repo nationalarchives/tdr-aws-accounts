@@ -42,13 +42,24 @@ module "encryption_key" {
   key_policy  = "cloudtrail"
 }
 
+module "log_data_sns" {
+  source         = "./tdr-terraform-modules/sns"
+  apply_resource = local.environment == "mgmt" || local.environment == "intg" || local.environment == "staging" || local.environment == "prod" ? true : false
+  project        = var.project
+  common_tags    = local.common_tags
+  function       = "logs"
+  sns_policy     = "log_data"
+}
+
 module "cloudtrail_s3" {
-  source        = "./tdr-terraform-modules/s3"
-  project       = var.project
-  function      = "cloudtrail"
-  common_tags   = local.common_tags
-  bucket_policy = "cloudtrail"
-  access_logs   = false
+  source           = "./tdr-terraform-modules/s3"
+  project          = var.project
+  function         = "cloudtrail"
+  common_tags      = local.common_tags
+  bucket_policy    = "cloudtrail"
+  access_logs      = false
+  sns_topic_arn    = module.log_data_sns.sns_arn
+  sns_notification = true
 }
 
 module "cloudtrail" {
@@ -67,4 +78,12 @@ module "log_data_s3" {
   function       = "log-data"
   access_logs    = false
   force_destroy  = false
+}
+
+module "lambda_s3_copy" {
+  source             = "./tdr-terraform-modules/lambda"
+  project            = var.project
+  common_tags        = local.common_tags
+  lambda_log_data    = true
+  log_data_sns_topic = module.log_data_sns.sns_arn
 }
