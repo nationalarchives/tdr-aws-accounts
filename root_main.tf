@@ -81,9 +81,10 @@ module "log_data_s3" {
 }
 
 module "lambda_s3_copy" {
-  source             = "./tdr-terraform-modules/lambda"
-  project            = var.project
-  common_tags        = local.common_tags
-  lambda_log_data    = true
+  source = "./tdr-terraform-modules/lambda"
+  project = var.project
+  common_tags = local.common_tags
+  lambda_log_data = true
   log_data_sns_topic = module.log_data_sns.sns_arn
+  target_s3_bucket = module.log_data_s3.s3_bucket_id
 }
