@@ -76,6 +76,7 @@ module "log_data_s3" {
   project        = var.project
   common_tags    = local.common_tags
   function       = "log-data"
+  bucket_policy  = "log-data"
   access_logs    = false
   force_destroy  = false
 }
