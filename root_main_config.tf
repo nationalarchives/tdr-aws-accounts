@@ -1,8 +1,9 @@
 module "config-s3" {
-  source      = "./tdr-terraform-modules/s3"
-  project     = var.project
-  function    = "config"
-  common_tags = local.common_tags
+  source        = "./tdr-terraform-modules/s3"
+  project       = var.project
+  function      = "config"
+  common_tags   = local.common_tags
+  sns_topic_arn = module.log_data_sns.sns_arn
 }
 
 module "config-eu-west-2" {

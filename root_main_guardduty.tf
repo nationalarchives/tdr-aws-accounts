@@ -1,8 +1,9 @@
 module "guardduty-s3" {
-  source      = "./tdr-terraform-modules/s3"
-  project     = var.project
-  function    = "guardduty"
-  common_tags = local.common_tags
+  source        = "./tdr-terraform-modules/s3"
+  project       = var.project
+  function      = "guardduty"
+  common_tags   = local.common_tags
+  sns_topic_arn = module.log_data_sns.sns_arn
 }
 
 module "guardduty-master-eu-west-2" {
