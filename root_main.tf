@@ -71,12 +71,12 @@ module "cloudtrail" {
 }
 
 module "lambda_s3_copy" {
-  source = "./tdr-terraform-modules/lambda"
-  project = var.project
-  common_tags = local.common_tags
-  lambda_log_data = true
+  source             = "./tdr-terraform-modules/lambda"
+  project            = var.project
+  common_tags        = local.common_tags
+  lambda_log_data    = true
   log_data_sns_topic = module.log_data_sns.sns_arn
-  target_s3_bucket = "${var.project}-log-data-mgmt"
+  target_s3_bucket   = "${var.project}-log-data-mgmt"
 }
 
 module "log_data_s3" {
@@ -88,4 +88,23 @@ module "log_data_s3" {
   bucket_policy  = "log-data"
   access_logs    = false
   force_destroy  = false
+}
+
+module "athena_s3" {
+  source         = "./tdr-terraform-modules/s3"
+  apply_resource = local.environment == "mgmt" ? true : false
+  project        = var.project
+  common_tags    = local.common_tags
+  function       = "athena"
+  access_logs    = false
+}
+
+module "athena" {
+  source         = "./tdr-terraform-modules/athena"
+  apply_resource = local.environment == "mgmt" ? true : false
+  project        = var.project
+  common_tags    = local.common_tags
+  function       = "security_logs"
+  bucket         = module.athena_s3.s3_bucket_id
+  queries        = ["tdr_cloudtrail_logs_mgmt", "create_table_tdr_cloudtrail_logs_mgmt"]
 }
