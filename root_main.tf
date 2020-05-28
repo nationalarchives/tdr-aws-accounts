@@ -106,4 +106,5 @@ module "athena" {
   common_tags    = local.common_tags
   function       = "security_logs"
   bucket         = module.athena_s3.s3_bucket_id
+  queries        = ["tdr_cloudtrail_logs_mgmt", "create_table_tdr_cloudtrail_logs_mgmt"]
 }
