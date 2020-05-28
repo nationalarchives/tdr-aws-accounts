@@ -15,6 +15,9 @@ Code using each language is deployed separately, see sections below.
 * Configures Securty Hub
 * Creates hosted zone
 * Creates Simple Email Service
+* Centralised security logs
+
+![Alt text](aws-centralized-logs.png?raw=true "Centralised security logs")
 
 ## Account level configurations - Python
 * Deletes default VPCs in all regions
