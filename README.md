@@ -16,6 +16,7 @@ Code using each language is deployed separately, see sections below.
 * Creates hosted zone
 * Creates Simple Email Service
 * Centralised security logs
+* Athena configuration and example queries to create tables, partition and search
 
 ![Alt text](aws-centralized-logs.png?raw=true "Centralised security logs")
 
