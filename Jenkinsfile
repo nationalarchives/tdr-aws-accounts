@@ -1,3 +1,5 @@
+library("tdr-jenkinslib")
+
 pipeline {
     agent {
         label "master"
@@ -78,7 +80,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "python3 python/delete-default-vpcs.py --account_number=${getAccountNumberFromStage()} --stage=${params.STAGE} --deployment_type=jenkins"
+                    sh "python3 python/delete-default-vpcs.py --account_number=${tdr.getAccountNumberFromStage(params.STAGE)} --stage=${params.STAGE} --deployment_type=jenkins"
                     slackSend(
                             color: "good",
                             message: "${params.STAGE.capitalize()} default VPCs deleted in all regions",
@@ -93,15 +95,12 @@ pipeline {
             echo 'Deleting Jenkins workspace...'
             deleteDir()
         }
+        success {
+            script {
+                if (params.STAGE == "intg"){
+                    tdr.runEndToEndTests(0, params.STAGE, BUILD_URL)
+                }
+            }
+        }
     }
-}
-
-def getAccountNumberFromStage() {
-    def stageToAccountMap = [
-            "intg": env.INTG_ACCOUNT,
-            "staging": env.STAGING_ACCOUNT,
-            "prod": env.PROD_ACCOUNT
-    ]
-
-    return stageToAccountMap.get(params.STAGE)
 }
