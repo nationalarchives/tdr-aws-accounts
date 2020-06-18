@@ -16,7 +16,7 @@ pipeline {
                 }
             }
             environment {
-                TF_VAR_tdr_account_number = getAccountNumberFromStage()
+                TF_VAR_tdr_account_number = tdr.getAccountNumberFromStage()
                 //no-color option set for Terraform commands as Jenkins console unable to output the colour
                 //making output difficult to read
                 TF_CLI_ARGS="-no-color"
