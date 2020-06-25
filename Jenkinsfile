@@ -40,20 +40,19 @@ pipeline {
                     steps {
                         echo 'Running Terraform plan...'
                         sh 'terraform plan'
-                        slackSend(
-                                color: 'good',
-                                message: "Terraform plan complete for ${params.STAGE.capitalize()} TDR environment. View here for plan: https://jenkins.tdr-management.nationalarchives.gov.uk/job/${JOB_NAME}/${BUILD_NUMBER}/console",
-                                channel: '#tdr-releases'
+                        tdr.postToDaTdrSlackChannel(colour: "good",
+                                                    message: "Terraform plan complete for ${params.STAGE.capitalize()} TDR environment." +
+                                                             "View here for plan: https://jenkins.tdr-management.nationalarchives.gov.uk/job/${JOB_NAME}/${BUILD_NUMBER}/console"
                         )
                     }
                 }
                 stage('Approve Terraform plan') {
                     steps {
                         echo 'Sending request for approval of Terraform plan...'
-                        slackSend(
-                                color: 'good',
-                                message: "Do you approve Terraform deployment for ${params.STAGE.capitalize()} TDR environment? jenkins.tdr-management.nationalarchives.gov.uk/job/${JOB_NAME}/${BUILD_NUMBER}/input/",
-                                channel: '#tdr-releases')
+                        tdr.postToDaTdrSlackChannel(colour: "good",
+                                                    message: "Do you approve Terraform deployment for ${params.STAGE.capitalize()} TDR environment? " +
+                                                             "jenkins.tdr-management.nationalarchives.gov.uk/job/${JOB_NAME}/${BUILD_NUMBER}/input/"
+                        )
                         input "Do you approve deployment to ${params.STAGE.capitalize()}?"
                     }
                 }
@@ -62,10 +61,8 @@ pipeline {
                         echo 'Applying Terraform changes...'
                         sh 'echo "yes" | terraform apply'
                         echo 'Changes applied'
-                        slackSend(
-                                color: 'good',
-                                message: "Deployment complete for ${params.STAGE.capitalize()} TDR environment",
-                                channel: '#tdr-releases'
+                        tdr.postToDaTdrSlackChannel(colour: "good",
+                                                    message: "Deployment complete for ${params.STAGE.capitalize()} TDR environment"
                         )
                     }
                 }
@@ -81,10 +78,8 @@ pipeline {
             steps {
                 script {
                     sh "python3 python/delete-default-vpcs.py --account_number=${tdr.getAccountNumberFromStage(params.STAGE)} --stage=${params.STAGE} --deployment_type=jenkins"
-                    slackSend(
-                            color: "good",
-                            message: "${params.STAGE.capitalize()} default VPCs deleted in all regions",
-                            channel: "#tdr-releases"
+                    tdr.postToDaTdrSlackChannel(colour: "good",
+                                                message: "${params.STAGE.capitalize()} default VPCs deleted in all regions"
                     )
                 }
             }
