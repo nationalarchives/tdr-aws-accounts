@@ -1,4 +1,5 @@
 library("tdr-jenkinslib")
+def repo = "tdr-aws-accounts"
 
 pipeline {
   agent {
@@ -7,7 +8,14 @@ pipeline {
   parameters {
     choice(name: "STAGE", choices: ["intg", "staging", "prod"], description: "AWS account being configured")
   }
-  stages {
+  stages { 
+    stage("Run git secrets") {
+      steps {
+        script {
+          tdr.runGitSecrets(repo)
+        }
+      }
+    }
     stage('Run Terraform build') {
       agent {
         ecs {
