@@ -77,6 +77,7 @@ module "lambda_s3_copy" {
   lambda_log_data    = true
   log_data_sns_topic = module.log_data_sns.sns_arn
   target_s3_bucket   = "${var.project}-log-data-mgmt"
+  kms_key_arn        = module.encryption_key.kms_key_arn
 }
 
 module "log_data_s3" {
@@ -106,5 +107,5 @@ module "athena" {
   common_tags    = local.common_tags
   function       = "security_logs"
   bucket         = module.athena_s3.s3_bucket_id
-  queries        = ["tdr_cloudtrail_logs_mgmt", "create_table_tdr_cloudtrail_logs_mgmt", "tdr_flowlogs_mgmt_jenkins", "create_table_tdr_flowlogs_mgmt_jenkins", "partition_tdr_flowlogs_mgmt_jenkins" ]
+  queries        = ["tdr_cloudtrail_logs_mgmt", "create_table_tdr_cloudtrail_logs_mgmt", "tdr_flowlogs_mgmt_jenkins", "create_table_tdr_flowlogs_mgmt_jenkins", "partition_tdr_flowlogs_mgmt_jenkins"]
 }
