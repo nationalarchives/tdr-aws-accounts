@@ -5,6 +5,3 @@ tdr_account_number = "XXXXXXXXXXXX"
 
 # SANDBOX
 # tdr_account_number = "XXXXXXXXXXXX"
-
-# DEV DRI (TDR Prototype)
-tdr_account_number = "XXXXXXXXXXXX"
