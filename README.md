@@ -65,28 +65,18 @@ terraform plan
 terraform apply
 ```
 
-### Deploy to Dev DRI (TDR Prototype) environment
-* Deploy from a developer laptop
-* Use AWS credentials from the TDR Manager account
-* Update the AWS account number in your terraform.tfvars to the sandbox account
-```
-terraform workspace select ddri
-terraform plan
-terraform apply
-```
-
 ### Deploy Terraform to Integration and Production environments
 * Deploy using Jenkins pipeline
 * If this is the first time in a new environment, set var.dns_delegated = false in root_main.tf
 * request DNS delegation for the hosted zone
 * Once in place, set var.dns_delegated = true
-* then rerun the pipeline for that environment 
+* then rerun the pipeline for that environment
 
 ## USAGE - PYTHON
 
 ### Deploy to Management environment
 * Install Python 3.7 or later to your laptop
-* Install AWS CLI and 
+* Install AWS CLI and
 * Create a virtual environment
 ```
 virtualenv -p python3 /Users/YOUR-USERNAME/venv
