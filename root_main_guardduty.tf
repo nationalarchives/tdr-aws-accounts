@@ -30,6 +30,15 @@ module "guardduty-master-ap-northeast-2" {
   }
 }
 
+module "guardduty-master-ap-northeast-3" {
+  source    = "./tdr-terraform-modules/guardduty"
+  bucket_id = module.guardduty-s3.s3_bucket_id
+  ip_set    = local.ip_set
+  providers = {
+    aws = aws.ap-northeast-3
+  }
+}
+
 module "guardduty-master-ap-south-1" {
   source    = "./tdr-terraform-modules/guardduty"
   bucket_id = module.guardduty-s3.s3_bucket_id

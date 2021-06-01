@@ -38,6 +38,18 @@ module "config-ap-northeast-2" {
   }
 }
 
+module "config-ap-northeast-3" {
+  source                        = "./tdr-terraform-modules/config"
+  include_global_resource_types = false
+  bucket_id                     = module.config-s3.s3_bucket_id
+  project                       = var.project
+  primary_config_recorder_id    = module.config-eu-west-2.config_recorder_id #used to ensure dependency
+  common_tags                   = local.common_tags
+  providers = {
+    aws = aws.ap-northeast-3
+  }
+}
+
 module "config-ap-south-1" {
   source                        = "./tdr-terraform-modules/config"
   include_global_resource_types = false
