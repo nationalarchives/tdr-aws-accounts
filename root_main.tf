@@ -63,11 +63,12 @@ module "cloudtrail_s3" {
 }
 
 module "cloudtrail" {
-  source         = "./tdr-terraform-modules/cloudtrail"
-  project        = var.project
-  common_tags    = local.common_tags
-  s3_bucket_name = module.cloudtrail_s3.s3_bucket_id
-  kms_key_id     = module.encryption_key.kms_key_arn
+  source              = "./tdr-terraform-modules/cloudtrail"
+  project             = var.project
+  common_tags         = local.common_tags
+  s3_bucket_name      = module.cloudtrail_s3.s3_bucket_id
+  kms_key_id          = module.encryption_key.kms_key_arn
+  log_stream_wildcard = ":*"
 }
 
 module "lambda_s3_copy" {
