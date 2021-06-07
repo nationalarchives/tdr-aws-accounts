@@ -1,6 +1,6 @@
 provider "aws" {
   region  = "eu-west-2"
-  version = 2.69
+  version = 3.31
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
@@ -19,6 +19,15 @@ provider "aws" {
 provider "aws" {
   alias  = "ap-northeast-2"
   region = "ap-northeast-2"
+  assume_role {
+    role_arn     = local.assume_role
+    session_name = "terraform"
+  }
+}
+
+provider "aws" {
+  alias  = "ap-northeast-3"
+  region = "ap-northeast-3"
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"

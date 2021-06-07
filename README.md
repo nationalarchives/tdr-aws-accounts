@@ -30,6 +30,8 @@ Code using each language is deployed separately, see sections below.
 
 ## TERRAFORM
 
+**Important Note**: tdr-aws-accounts uses *v13* of Terraform. Ensure that **Terraform v13** is installed before proceeding.
+
 ### Deploy to Management environment
 * Deploy from a developer laptop
 * Duplicate terraform.tfvars.example, removing the .example suffix
