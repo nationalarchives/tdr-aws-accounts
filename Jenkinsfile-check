@@ -2,6 +2,5 @@ library("tdr-jenkinslib")
 
 terraformCheckJob(
   repo: "tdr-aws-accounts",
-  terraformDirectoryPath: ".",
-  terraformNode: "terraform-v13"
+  terraformDirectoryPath: "."
 )
