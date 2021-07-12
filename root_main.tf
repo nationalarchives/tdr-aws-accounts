@@ -76,6 +76,7 @@ module "lambda_s3_copy" {
   project            = var.project
   common_tags        = local.common_tags
   lambda_log_data    = true
+  timeout_seconds    = 30
   log_data_sns_topic = module.log_data_sns.sns_arn
   target_s3_bucket   = "${var.project}-log-data-mgmt"
   kms_key_arn        = module.encryption_key.kms_key_arn
