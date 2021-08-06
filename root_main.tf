@@ -44,7 +44,7 @@ module "encryption_key" {
 
 module "log_data_sns" {
   source         = "./tdr-terraform-modules/sns"
-  apply_resource = local.environment == "mgmt" || local.environment == "intg" || local.environment == "staging" || local.environment == "prod" ? true : false
+  apply_resource = local.environment == "mgmt" || local.environment == "intg" || local.environment == "staging" || local.environment == "prod" || local.environment == "sbox" ? true : false
   project        = var.project
   common_tags    = local.common_tags
   function       = "logs"
