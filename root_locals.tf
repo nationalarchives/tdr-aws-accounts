@@ -9,11 +9,13 @@ locals {
     "sbox"    = "sandbox",
     "prot"    = "prototype"
   }
-  common_tags = map(
-    "Environment", local.environment,
-    "Owner", "TDR",
-    "Terraform", true,
-    "CostCentre", module.global_parameters.cost_centre,
+  common_tags = tomap(
+    {
+      "Environment" = local.environment,
+      "Owner"       = "TDR",
+      "Terraform"   = true,
+      "CostCentre"  = module.global_parameters.cost_centre,
+    }
   )
   region = "eu-west-2"
   ip_set = module.global_parameters.trusted_ips
