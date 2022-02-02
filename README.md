@@ -12,7 +12,7 @@ Code using each language is deployed separately, see sections below.
 * Configures GuardDuty and enables in all regions
 * Turns on Config in all regions
 * Configures CloudTrail at AWS account level
-* Configures Securty Hub
+* Configures Security Hub
 * Creates hosted zone
 * Creates Simple Email Service
 * Centralised security logs
@@ -30,7 +30,7 @@ Code using each language is deployed separately, see sections below.
 
 ## TERRAFORM
 
-**Important Note**: tdr-aws-accounts uses *v13* of Terraform. Ensure that **Terraform v13** is installed before proceeding.
+**Important Note**: tdr-aws-accounts uses *v1.1.3* of Terraform. Ensure that **Terraform v1.1.3** is installed before proceeding.
 
 ### Deploy to Management environment
 * Deploy from a developer laptop

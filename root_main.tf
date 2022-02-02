@@ -110,4 +110,5 @@ module "athena" {
   function       = "security_logs"
   bucket         = module.athena_s3.s3_bucket_id
   queries        = ["tdr_cloudtrail_logs_mgmt", "create_table_tdr_cloudtrail_logs_mgmt", "tdr_flowlogs_mgmt_jenkins", "create_table_tdr_flowlogs_mgmt_jenkins", "partition_tdr_flowlogs_mgmt_jenkins"]
+  environment    = local.environment
 }
