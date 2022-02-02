@@ -19,7 +19,7 @@ pipeline {
     stage('Run Terraform build') {
       agent {
         ecs {
-          inheritFrom 'terraform-latest'
+          inheritFrom 'terraform'
           taskrole "arn:aws:iam::${env.MANAGEMENT_ACCOUNT}:role/TDRTerraformAssumeRole${params.STAGE.capitalize()}"
         }
       }
@@ -33,7 +33,7 @@ pipeline {
         stage('Set up Terraform workspace') {
           steps {
             echo 'Initializing Terraform...'
-            sh "git clone --branch terraform-v1 https://github.com/nationalarchives/tdr-terraform-modules.git"
+            sh "git clone https://github.com/nationalarchives/tdr-terraform-modules.git"
             sshagent(['github-jenkins']) {
               sh("git clone git@github.com:nationalarchives/tdr-configurations.git")
             }
