@@ -31,6 +31,12 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.WORKFLOW_PAT }}
+      - name: Configure AWS credentials for Lambda
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.MANAGEMENT_ACCOUNT }}:role/TDRGithubTerraformAssumeRole${{ needs.setup.outputs.title-environment }}
+          aws-region: eu-west-2
+          role-session-name: TerraformRole
       - run: |
           pip install boto3 
           python ./python/delete-default-vpcs.py
