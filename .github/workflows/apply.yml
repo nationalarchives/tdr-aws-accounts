@@ -34,7 +34,7 @@ jobs:
       - id: set-environment-names
         run: |
             env = "${{ github.event.inputs.environment }}"
-            print(f"::set-output name=title_environment::{env.title()}")
+            print(f"::set-output name=title-environment::{env.title()}")
         shell: python
       - name: Configure AWS credentials for Lambda
         uses: aws-actions/configure-aws-credentials@v1
