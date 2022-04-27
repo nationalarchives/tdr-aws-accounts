@@ -32,7 +32,9 @@ jobs:
           submodules: recursive
           token: ${{ secrets.WORKFLOW_PAT }}
       - id: set-environment-names
-        run: print(f"::set-output name=title_environment::{"${{ inputs.environment }}".title()}")
+        run: |
+            env = "${{ inputs.environment }}"
+            print(f"::set-output name=title_environment::{env.title()}")
         shell: python
       - name: Configure AWS credentials for Lambda
         uses: aws-actions/configure-aws-credentials@v1
