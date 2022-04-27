@@ -27,7 +27,11 @@ jobs:
   delete-vpc:
     runs-on: ubuntu-latest
     steps:
-      - run: python python/delete-default-vpcs.py
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          token: ${{ secrets.WORKFLOW_PAT }}
+      - run: python ./python/delete-default-vpcs.py
       - uses: nationalarchives/tdr-github-actions/.github/actions/slack-send@main
         with:
           message: "${{ inputs.environment }} default VPCs deleted in all regions"
