@@ -34,6 +34,7 @@ jobs:
       - id: set-environment-names
         run: |
             env = "${{ github.event.inputs.environment }}"
+            print(f"::set-output name=account-number-secret::{env.upper()}_ACCOUNT_NUMBER")
             print(f"::set-output name=title-environment::{env.title()}")
         shell: python
       - name: Configure AWS credentials for Lambda
@@ -44,7 +45,7 @@ jobs:
           role-session-name: TerraformRole
       - run: |
           pip install boto3 
-          python ./python/delete-default-vpcs.py
+          python ./python/delete-default-vpcs.py --account_number=${{ secrets[steps.set-environment-names.outputs.account-number-secret] }} --stage=${{ github.event.inputs.environment }} --deployment_type=github
       - uses: nationalarchives/tdr-github-actions/.github/actions/slack-send@main
         with:
           message: "${{ inputs.environment }} default VPCs deleted in all regions"

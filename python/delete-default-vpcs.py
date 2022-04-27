@@ -26,7 +26,7 @@ class iam:
         self.account_number = account_number
         self.dry_run = dry_run
 
-        if deployment_type == "jenkins":
+        if deployment_type == "github":
             self.session = get_session(account_number, "TDRTerraformRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
@@ -45,7 +45,7 @@ class ec2:
         self.account_number = account_number
         self.dry_run = dry_run
 
-        if deployment_type == "jenkins":
+        if deployment_type == "github":
             self.session = get_session(account_number, "TDRTerraformRole" + stage.capitalize())
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
