@@ -31,10 +31,14 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.WORKFLOW_PAT }}
+      - id: set-environment-names
+        run: print(f"::set-output name=title_environment::{"${{ inputs.environment }}".title()}")
+        shell: python
+      - run: "${{ github.event.inputs.environment }}".title
       - name: Configure AWS credentials for Lambda
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.MANAGEMENT_ACCOUNT }}:role/TDRGithubTerraformAssumeRole${{ needs.setup.outputs.title-environment }}
+          role-to-assume: arn:aws:iam::${{ secrets.MANAGEMENT_ACCOUNT }}:role/TDRGithubTerraformAssumeRole${{ steps.set-environment-names.outputs.title-environment }}
           aws-region: eu-west-2
           role-session-name: TerraformRole
       - run: |
