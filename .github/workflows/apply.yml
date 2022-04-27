@@ -33,7 +33,7 @@ jobs:
           token: ${{ secrets.WORKFLOW_PAT }}
       - id: set-environment-names
         run: |
-            env = "${{ inputs.environment }}"
+            env = "${{ github.event.inputs.environment }}"
             print(f"::set-output name=title_environment::{env.title()}")
         shell: python
       - name: Configure AWS credentials for Lambda
