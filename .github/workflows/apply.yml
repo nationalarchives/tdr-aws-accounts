@@ -1,0 +1,52 @@
+name: 'Terraform apply'
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        description: The environment to deploy against.
+        type: string
+        default: intg
+permissions:
+  id-token: write
+  contents: write
+jobs:
+  apply:
+    uses: nationalarchives/tdr-github-actions/.github/workflows/terraform_apply.yml@main
+    with:
+      repo-name: tdr-aws-accounts
+      environment: ${{ github.event.inputs.environment }}
+    secrets:
+      MANAGEMENT_ACCOUNT: ${{ secrets.MANAGEMENT_ACCOUNT }}
+      WORKFLOW_PAT: ${{ secrets.WORKFLOW_PAT }}
+      ACCOUNT_NUMBER: ${{ secrets.ACCOUNT_NUMBER }}
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      INTG_ACCOUNT_NUMBER: ${{ secrets.INTG_ACCOUNT_NUMBER }}
+      STAGING_ACCOUNT_NUMBER: ${{ secrets.STAGING_ACCOUNT_NUMBER }}
+      PROD_ACCOUNT_NUMBER: ${{ secrets.PROD_ACCOUNT_NUMBER }}
+  delete-vpc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          token: ${{ secrets.WORKFLOW_PAT }}
+      - id: set-environment-names
+        run: |
+            env = "${{ github.event.inputs.environment }}"
+            print(f"::set-output name=account-number-secret::{env.upper()}_ACCOUNT_NUMBER")
+            print(f"::set-output name=title-environment::{env.title()}")
+        shell: python
+      - name: Configure AWS credentials for Lambda
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.MANAGEMENT_ACCOUNT }}:role/TDRGithubTerraformAssumeRole${{ steps.set-environment-names.outputs.title-environment }}
+          aws-region: eu-west-2
+          role-session-name: TerraformRole
+      - run: |
+          pip install boto3 
+          python ./python/delete-default-vpcs.py --account_number=${{ secrets[steps.set-environment-names.outputs.account-number-secret] }} --stage=${{ github.event.inputs.environment }} --deployment_type=github
+      - uses: nationalarchives/tdr-github-actions/.github/actions/slack-send@main
+        with:
+          message: "${{ inputs.environment }} default VPCs deleted in all regions"
+          slack-url: ${{ secrets.SLACK_WEBHOOK }}
