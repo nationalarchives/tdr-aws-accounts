@@ -68,7 +68,7 @@ terraform apply
 ```
 
 ### Deploy Terraform to Integration and Production environments
-* Deploy using Jenkins pipeline
+* Deploy using Github actions workflow
 * If this is the first time in a new environment, set var.dns_delegated = false in root_main.tf
 * request DNS delegation for the hosted zone
 * Once in place, set var.dns_delegated = true
