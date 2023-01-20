@@ -5,6 +5,7 @@ module "global_parameters" {
 module "iam" {
   source            = "./tdr-terraform-modules/iam"
   aws_account_level = true
+  environment       = local.environment
 }
 
 # if the hosted zone has already been created manually, before applying terraform, import to state file using e.g.:
