@@ -2,6 +2,12 @@ module "global_parameters" {
   source = "./tdr-configurations/terraform"
 }
 
+data "aws_vpc" "vpc" {
+  tags = {
+    "Name" = "${var.project}-vpc-${local.environment}"
+  }
+}
+
 module "iam" {
   source            = "./tdr-terraform-modules/iam"
   aws_account_level = true
@@ -18,6 +24,8 @@ module "route_53_zone" {
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
   common_tags           = local.common_tags
   manual_creation       = local.environment == "mgmt" || local.environment == "intg" ? true : false
+  kms_key_arn           = module.dnssec_signing_key.kms_key_arn
+  vpc_id                = data.aws_vpc.vpc.id
 }
 
 # route53 hosted zone must already have been set up
@@ -41,6 +49,21 @@ module "encryption_key" {
   common_tags = local.common_tags
   function    = "account"
   key_policy  = "cloudtrail"
+}
+
+module "dnssec_signing_key" {
+  source                   = "./tdr-terraform-modules/kms"
+  common_tags              = local.common_tags
+  environment              = local.environment
+  function                 = "dnssec"
+  project                  = var.project
+  key_policy               = "dnssec"
+  key_usage                = "SIGN_VERIFY"
+  customer_master_key_spec = "ECC_NIST_P256"
+  enable_key_rotation      = false
+  providers = {
+    aws = aws.us-east-1
+  }
 }
 
 module "log_data_sns" {
