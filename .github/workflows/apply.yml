@@ -34,7 +34,7 @@ jobs:
       - id: set-environment-names
         run: |
           import os
-          env = "${{ github.events.inputs.environment }}"
+          env = "${{ github.event.inputs.environment }}"
           with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
             print(f"title-environment={env.title()}", file=fh)
             print(f"account-number-secret={env.upper()}_ACCOUNT_NUMBER", file=fh)
