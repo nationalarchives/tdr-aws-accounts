@@ -1,7 +1,7 @@
 import boto3
 from boto3 import Session
 
-def get_session(account_number, role_name):
+def get_session(account_number, role_name, external_id):
     sts_default_provider_chain = boto3.client('sts')
 
     role_to_assume_arn='arn:aws:iam::' + account_number + ':role/' + role_name
@@ -10,7 +10,8 @@ def get_session(account_number, role_name):
 
     response=sts_default_provider_chain.assume_role(
         RoleArn=role_to_assume_arn,
-        RoleSessionName=role_session_name
+        RoleSessionName=role_session_name,
+        ExternalId=external_id
     )
 
     creds=response['Credentials']
