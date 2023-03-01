@@ -47,6 +47,7 @@ jobs:
           role-session-name: TerraformRole
       - run: |
           pip install boto3 
+          terraform init
           python ./python/delete-default-vpcs.py --account_number=${{ secrets[steps.set-environment-names.outputs.account-number-secret] }} --stage=${{ github.event.inputs.environment }} --deployment_type=github --external_id=$(echo module.global_parameters.external_ids.terraform_environments | terraform console | tail -n 1 | tr -d '"')
       - uses: nationalarchives/tdr-github-actions/.github/actions/slack-send@main
         with:
