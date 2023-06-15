@@ -9,7 +9,7 @@ timestamp = int(time.time()) * 1000
 log_group_name = f"terraform-plan-outputs-{sys.argv[3]}"
 log_stream_name = sys.argv[2]
 
-chunk_size = 180000
+chunk_size = 500
 
 
 def split(list_a):
@@ -19,15 +19,14 @@ def split(list_a):
 
 with open(sys.argv[1]) as file:
     message = file.read()
-    print(len(message.encode("utf-8")))
-    if len(message.encode("utf-8")) > chunk_size:
+    message_list = message.split("\n")
+    if len(message_list) > chunk_size:
         message_list = message.split("\n")
         split_list = split(message_list)
         log_event = [{'timestamp': timestamp, 'message': "\n".join(x)} for x in split_list]
     else:
         log_event = [{'timestamp': timestamp, 'message': message}]
 
-print(len(log_event))
 client.create_log_stream(logGroupName=log_group_name, logStreamName=log_stream_name)
 response = client.put_log_events(logGroupName=log_group_name,
                                  logStreamName=log_stream_name,
