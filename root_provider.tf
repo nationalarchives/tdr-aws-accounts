@@ -4,7 +4,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -14,7 +14,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -24,7 +24,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -34,7 +34,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -44,7 +44,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -54,7 +54,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -64,7 +64,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -74,7 +74,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -84,7 +84,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -94,7 +94,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -104,7 +104,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -114,7 +114,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -124,7 +124,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -134,7 +134,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -144,7 +144,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -154,7 +154,7 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }
 
@@ -164,6 +164,6 @@ provider "aws" {
   assume_role {
     role_arn     = local.assume_role
     session_name = "terraform"
-    external_id  = module.global_parameters.external_ids.terraform_environments
+    external_id  = module.terraform_config.terraform_config[local.environment]["terraform_external_id"]
   }
 }

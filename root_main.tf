@@ -2,6 +2,11 @@ module "global_parameters" {
   source = "./tdr-configurations/terraform"
 }
 
+module "terraform_config" {
+  source = "./da-terraform-configurations/"
+  project = var.project
+}
+
 module "iam" {
   source            = "./tdr-terraform-modules/iam"
   aws_account_level = true
