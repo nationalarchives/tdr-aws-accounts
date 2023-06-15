@@ -29,7 +29,6 @@ jobs:
     with:
       repo-name: tna-custodian
       environment: ${{ github.event.inputs.environment }}
-      working-directory: terraform
       project: ${{ github.event.inputs.project }}
     secrets:
       WORKFLOW_TOKEN: ${{ secrets[needs.setup.outputs.workflow-token] }}
@@ -40,6 +39,7 @@ jobs:
       DYNAMO_TABLE: ${{ secrets[needs.setup.outputs.dynamo-table] }}
   delete-vpc:
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - uses: actions/checkout@v3
         with:
