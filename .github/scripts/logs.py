@@ -19,6 +19,7 @@ def split(list_a):
 
 with open(sys.argv[1]) as file:
     message = file.read()
+    print(len(message.encode("utf-8")))
     if len(message.encode("utf-8")) > chunk_size:
         message_list = message.split("\n")
         split_list = split(message_list)
@@ -26,6 +27,7 @@ with open(sys.argv[1]) as file:
     else:
         log_event = [{'timestamp': timestamp, 'message': message}]
 
+print(len(log_event))
 client.create_log_stream(logGroupName=log_group_name, logStreamName=log_stream_name)
 response = client.put_log_events(logGroupName=log_group_name,
                                  logStreamName=log_stream_name,
