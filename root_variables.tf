@@ -3,7 +3,7 @@ variable "project" {
   default     = "tdr"
 }
 
-variable "tdr_account_number" {
+variable "account_number" {
   description = "The AWS account number where the TDR environment is hosted"
   type        = string
 }
