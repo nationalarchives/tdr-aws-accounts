@@ -53,7 +53,7 @@ jobs:
           role-session-name: TerraformRole
       - run: |
           pip install boto3 
-          python ./python/delete-default-vpcs.py --account_number=${{ secrets[needs.setup.outputs.account-number] }} --stage=${{ github.event.inputs.environment }} --deployment_type=github  --external_id=${{ secrets[needs.setup.outputs.terraform-external-id] }}
+          python ./python/delete-default-vpcs.py --account_number=${{ secrets[needs.setup.outputs.account-number] }} --stage=${{ github.event.inputs.environment }} --deployment_type=github  --external_id=${{ secrets[needs.setup.outputs.terraform-external-id] }} --project ${{ github.event.inputs.project }}
       - uses: nationalarchives/tdr-github-actions/.github/actions/slack-send@main
         with:
           message: "${{ inputs.environment }} default VPCs deleted in all regions"
