@@ -22,7 +22,7 @@ with open(sys.argv[1]) as file:
     if len(message.encode("utf-8")) > chunk_size:
         message_list = message.split("\n")
         split_list = split(message_list)
-        log_event = [{'timestamp': timestamp, 'message': x.join("\n")} for x in split_list]
+        log_event = [{'timestamp': timestamp, 'message': "\n".join(x)} for x in split_list]
     else:
         log_event = [{'timestamp': timestamp, 'message': message}]
 
