@@ -20,7 +20,7 @@ with open(sys.argv[1]) as file:
     message_size = len(message.encode("utf-8"))
     message_list = message.split("\n")
     if message_size > 262143:
-        chunk_size = int(message_size / 2621430)
+        chunk_size = int(message_size / 262143) + 10
         message_list = message.split("\n")
         split_list = split(message_list, chunk_size)
         log_event = [{'timestamp': timestamp, 'message': "\n".join(x)} for x in split_list]
