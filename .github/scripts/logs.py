@@ -4,23 +4,25 @@ import sys
 from urllib.parse import quote_plus
 import os
 
-client = boto3.client("logs")
+client = boto3.client("logs", region_name="eu-west-2")
 timestamp = int(time.time()) * 1000
 log_group_name = f"terraform-plan-outputs-{sys.argv[3]}"
 log_stream_name = sys.argv[2]
 
+chunk_size = 262143
+
 
 def split(list_a):
-    for i in range(0, len(list_a), 262143):
-        yield list_a[i:i + 262143]
+    for i in range(0, len(list_a), chunk_size):
+        yield list_a[i:i + chunk_size]
 
 
 with open(sys.argv[1]) as file:
     message = file.read()
-    if len(message.encode("utf-8")) > 262144:
+    if len(message.encode("utf-8")) > chunk_size:
         message_list = message.split("\n")
         split_list = split(message_list)
-        log_event = [{'timestamp': timestamp, 'message': x} for x in split_list]
+        log_event = [{'timestamp': timestamp, 'message': x.join("\n")} for x in split_list]
     else:
         log_event = [{'timestamp': timestamp, 'message': message}]
 
