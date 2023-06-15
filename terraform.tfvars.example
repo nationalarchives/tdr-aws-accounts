@@ -1,7 +1,0 @@
-# copy this file and rename to terraform.tfvars
-# replace with the AWS account number for the management or sandbox environment
-# MANAGEMENT
-tdr_account_number = "XXXXXXXXXXXX"
-
-# SANDBOX
-# tdr_account_number = "XXXXXXXXXXXX"

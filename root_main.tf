@@ -3,7 +3,7 @@ module "global_parameters" {
 }
 
 module "terraform_config" {
-  source = "./da-terraform-configurations/"
+  source  = "./da-terraform-configurations/"
   project = var.project
 }
 
@@ -49,63 +49,74 @@ module "encryption_key" {
 }
 
 module "log_data_sns" {
-  source         = "./tdr-terraform-modules/sns"
-  apply_resource = local.environment == "mgmt" || local.environment == "intg" || local.environment == "staging" || local.environment == "prod" || local.environment == "sbox" ? true : false
-  project        = var.project
-  common_tags    = local.common_tags
-  function       = "logs"
-  sns_policy     = "log_data"
+  source = "git::https://github.com/nationalarchives/da-terraform-modules//sns?ref=add-sns-topic-to-s3-bucket"
+  lambda_subscriptions = {
+    s3_copy = module.lambda_s3_copy.lambda_arn
+  }
+  sns_policy = templatefile("./templates/sns/log-data.json.tpl", { sns_topic_name = "${var.project}-logs-${local.environment}", account_id = data.aws_caller_identity.current.account_id })
+  tags       = local.common_tags
+  topic_name = "${var.project}-logs-${local.environment}"
 }
 
 module "cloudtrail_s3" {
-  source           = "./tdr-terraform-modules/s3"
-  project          = var.project
-  function         = "cloudtrail"
-  common_tags      = local.common_tags
-  bucket_policy    = "cloudtrail"
-  access_logs      = false
-  sns_topic_arn    = module.log_data_sns.sns_arn
-  sns_notification = true
+  source      = "git::https://github.com/nationalarchives/da-terraform-modules//s3?ref=add-sns-topic-to-s3-bucket"
+  bucket_name = local.cloudtrail_bucket
+  bucket_policy = templatefile("./templates/s3/cloudtrail.json.tpl", {
+    bucket_name = local.cloudtrail_bucket
+  })
+  create_log_bucket = false
+  common_tags       = local.common_tags
 }
 
 module "cloudtrail" {
   source              = "./tdr-terraform-modules/cloudtrail"
   project             = var.project
   common_tags         = local.common_tags
-  s3_bucket_name      = module.cloudtrail_s3.s3_bucket_id
+  s3_bucket_name      = local.cloudtrail_bucket
   kms_key_id          = module.encryption_key.kms_key_arn
   log_stream_wildcard = ":*"
 }
 
 module "lambda_s3_copy" {
-  source             = "./tdr-terraform-modules/lambda"
-  project            = var.project
-  common_tags        = local.common_tags
-  lambda_log_data    = true
-  timeout_seconds    = 30
-  log_data_sns_topic = module.log_data_sns.sns_arn
-  target_s3_bucket   = "${var.project}-log-data-mgmt"
-  kms_key_arn        = module.encryption_key.kms_key_arn
+  source = "git::https://github.com/nationalarchives/da-terraform-modules//lambda?ref=add-sns-topic-to-s3-bucket"
+  plaintext_env_vars = {
+    TARGET_S3_BUCKET = "${var.project}-log-data-mgmt"
+  }
+  function_name = "${var.project}-log-data-${local.environment}"
+  handler       = "lambda_function.lambda_handler"
+  policies = {
+    log_data = templatefile("./templates/lambda/log-data.json.tpl", {})
+  }
+  runtime = "python3.7"
+  tags    = local.common_tags
+  lambda_invoke_permissions = {
+    "sns.amazonaws.com" = module.log_data_sns.sns_arn
+  }
+  filename        = data.archive_file.log_data_lambda.output_path
+  timeout_seconds = 30
 }
 
 module "log_data_s3" {
-  source         = "./tdr-terraform-modules/s3"
-  apply_resource = local.environment == "mgmt" ? true : false
-  project        = var.project
-  common_tags    = local.common_tags
-  function       = "log-data"
-  bucket_policy  = "log-data"
-  access_logs    = false
-  force_destroy  = false
+  source      = "git::https://github.com/nationalarchives/da-terraform-modules//s3"
+  bucket_name = "${var.project}-log-data-${local.environment}"
+  bucket_policy = templatefile("./templates/s3/log-data-policy.json.tpl", {
+    bucket_name        = "${var.project}-log-data-${local.environment}"
+    external_account_1 = module.terraform_config.account_numbers["intg"],
+    external_account_2 = module.terraform_config.account_numbers["staging"],
+    external_account_3 = module.terraform_config.account_numbers["prod"]
+  })
+  create_log_bucket = false
+  common_tags       = local.common_tags
 }
 
 module "athena_s3" {
-  source         = "./tdr-terraform-modules/s3"
-  apply_resource = local.environment == "mgmt" ? true : false
-  project        = var.project
-  common_tags    = local.common_tags
-  function       = "athena"
-  access_logs    = false
+  source      = "git::https://github.com/nationalarchives/da-terraform-modules//s3"
+  bucket_name = local.athena_bucket
+  bucket_policy = templatefile("./templates/s3/ssl-only.json.tpl", {
+    bucket_name = local.athena_bucket
+  })
+  create_log_bucket = false
+  common_tags       = local.common_tags
 }
 
 module "athena" {
@@ -114,7 +125,7 @@ module "athena" {
   project        = var.project
   common_tags    = local.common_tags
   function       = "security_logs"
-  bucket         = module.athena_s3.s3_bucket_id
+  bucket         = local.athena_bucket
   queries        = ["tdr_cloudtrail_logs_mgmt", "create_table_tdr_cloudtrail_logs_mgmt", "tdr_flowlogs_mgmt_jenkins", "create_table_tdr_flowlogs_mgmt_jenkins", "partition_tdr_flowlogs_mgmt_jenkins"]
   environment    = local.environment
 }
