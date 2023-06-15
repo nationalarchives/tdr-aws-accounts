@@ -20,14 +20,13 @@ def json_serial(obj):
     raise TypeError("Type not serializable")
 
 class iam:
-    def __init__(self, profile, account_number, stage, deployment_type, dry_run, external_id):
-
+    def __init__(self, profile, account_number, stage, deployment_type, dry_run, external_id, role_name):
         self.profile = profile
         self.account_number = account_number
         self.dry_run = dry_run
 
         if deployment_type == "github":
-            self.session = get_session(account_number, "TDRTerraformRole" + stage.capitalize(), external_id)
+            self.session = get_session(account_number, role_name, external_id)
         else:
             self.session = boto3.session.Session(profile_name=self.profile)
 
@@ -39,7 +38,7 @@ class iam:
         print('Deleting VPCs in Account %s' % aliases[0])
 
 class ec2:
-    def __init__(self, profile, account_number, stage, deployment_type, dry_run, external_id):
+    def __init__(self, profile, account_number, stage, deployment_type, dry_run, external_id, role_name):
 
         self.profile = profile
         self.account_number = account_number
@@ -121,6 +120,7 @@ if __name__ == "__main__":
     parser.add_argument('--stage')
     parser.add_argument('--deployment_type', default='manual')
     parser.add_argument('--external_id')
+    parser.add_argument('--project')
     parser.add_argument('--dry_run', action='count')
 
     args = parser.parse_args()
@@ -131,6 +131,13 @@ if __name__ == "__main__":
     deployment_type = args.deployment_type
     dry_run = args.dry_run
     external_id = args.external_id
+    project = args.project
 
-    iam(profile, account_number, stage, deployment_type, dry_run, external_id)
-    ec2(profile, account_number, stage, deployment_type, dry_run, external_id)
+    role_name = None
+    if project == "tdr":
+        role_name = "TDRTerraformRole" + stage.capitalize()
+    elif project == "dr2":
+        role_name = stage.capitalize() + "TerraformRole"
+
+    iam(profile, account_number, stage, deployment_type, dry_run, external_id, role_name)
+    ec2(profile, account_number, stage, deployment_type, dry_run, external_id, role_name)
