@@ -9,7 +9,7 @@ timestamp = int(time.time()) * 1000
 log_group_name = f"terraform-plan-outputs-{sys.argv[3]}"
 log_stream_name = sys.argv[2]
 
-chunk_size = 262143
+chunk_size = 180000
 
 
 def split(list_a):
