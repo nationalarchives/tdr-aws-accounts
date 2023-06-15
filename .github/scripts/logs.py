@@ -23,7 +23,7 @@ with open(sys.argv[1]) as file:
         chunk_size = int(message_size / 262143) + 10
         message_list = message.split("\n")
         split_list = split(message_list, chunk_size)
-        log_event = [{'timestamp': timestamp, 'message': "\n".join(x)} for x in split_list]
+        log_event = [{'timestamp': timestamp, 'message': "\n".join(x)} for x in split_list if len(x) > 0]
     else:
         log_event = [{'timestamp': timestamp, 'message': message}]
 
