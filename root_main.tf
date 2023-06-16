@@ -18,19 +18,23 @@ module "iam" {
 # terraform import module.route_53_zone.aws_route53_record.hosted_zone_ns Z4KAPRWWNC7JR_tdr-management.nationalarchives.gov.uk_NS_tdr-management
 
 module "route_53_zone" {
+  count                 = var.create_hosted_zone ? 1 : 0
   source                = "./tdr-terraform-modules/route53"
   project               = var.project
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
   common_tags           = local.common_tags
   manual_creation       = local.environment == "mgmt" || local.environment == "intg" ? true : false
+  create_hosted_zone    = false
 }
 
 # route53 hosted zone must already have been set up
 module "ses" {
+  count                 = var.create_domain_email ? 1 : 0
   source                = "./tdr-terraform-modules/ses"
   project               = var.project
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
-  hosted_zone_id        = module.route_53_zone.hosted_zone_id
+  hosted_zone_id        = module.route_53_zone[count.index].hosted_zone_id
+  email_address         = module.terraform_config.terraform_config["notification_email"]
   #if building a new environment, uncomment the line below and replace xxxx with new workspace name
   #dns_delegated         = local.environment == "xxxx" ? false : true
 }
@@ -104,6 +108,7 @@ module "log_data_s3" {
     external_account_1 = module.terraform_config.account_numbers["intg"],
     external_account_2 = module.terraform_config.account_numbers["staging"],
     external_account_3 = module.terraform_config.account_numbers["prod"]
+    role_name          = "${var.project}-log-data-${local.environment}-role"
   })
   create_log_bucket = false
   common_tags       = local.common_tags

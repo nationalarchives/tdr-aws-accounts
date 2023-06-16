@@ -23,9 +23,7 @@
       "Effect": "Allow",
       "Principal": {
         "AWS": [
-          "arn:aws:iam::${external_account_1}:role/TDRLogDataAssumeRoleIntg",
-          "arn:aws:iam::${external_account_2}:role/TDRLogDataAssumeRoleStaging",
-          "arn:aws:iam::${external_account_3}:role/TDRLogDataAssumeRoleProd"
+          "arn:aws:iam::${external_account_1}:role/${role_name}"
         ]
       },
       "Resource": [

@@ -8,5 +8,7 @@ jobs:
   check:
     uses: nationalarchives/tdr-github-actions/.github/workflows/terraform_check.yml@main
     secrets:
-      MANAGEMENT_ACCOUNT: ${{ secrets.MANAGEMENT_ACCOUNT }}
+      MANAGEMENT_ACCOUNT: ${{ secrets.TDR_MANAGEMENT_ACCOUNT }}
       WORKFLOW_PAT: ${{ secrets.WORKFLOW_PAT }}
+      STATE_BUCKET: ${{ TDR_MGMT_STATE_BUCKET }}
+      DYNAMO_TABLE: ${{ TDR_MGMT_DYNAMO_TABLE }}

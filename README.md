@@ -23,79 +23,19 @@ Code using each language is deployed separately, see sections below.
 ## Account level configurations - Python
 * Deletes default VPCs in all regions
 
-## USAGE - TERRAFORM
-
-### Install Git Secrets
-* Install AWS [git-secrets](https://github.com/awslabs/git-secrets) to prevent accidentally committing sensitive AWS data
-
-## TERRAFORM
-
-**Important Note**: tdr-aws-accounts uses *v1.1.3* of Terraform. Ensure that **Terraform v1.1.3** is installed before proceeding.
-
-### Deploy to Management environment
-* Deploy from a developer laptop
-* Duplicate terraform.tfvars.example, removing the .example suffix
-* Update with the AWS account number of the management account
-* Ensure that there is a role "IAM_Admin_Role" with a trust relationship to the same account, i.e. the management account
-```
-terraform init
-terraform workspace select mgmt
-terraform plan
-```
-
-### Manually created hosted zones
-* if the Route53 hosted zone has been created manually, set var.manual_creation = true in root_main.tf for that environment
-* then run Terraform commands as below
-```
-terraform import module.route_53_zone.aws_route53_zone.hosted_zone Z4KAPRWWNC7JR
-terraform import module.route_53_zone.aws_route53_record.hosted_zone_ns Z4KAPRWWNC7JR_tdr-management.nationalarchives.gov.uk_NS_tdr-management
-```
-* replace the dummy ZoneID  with the actual one
-* once any manually created items have been imported:
-```
-terraform plan
-terraform apply
-```
-
-### Deploy to Sandbox environment
-* Deploy from a developer laptop
-* Use AWS credentials from the TDR Manager account
-* Update the AWS account number in your terraform.tfvars to the sandbox account
-```
-terraform workspace select sbox
-terraform plan
-terraform apply
-```
-
-### Deploy Terraform to Integration and Production environments
-* Deploy using Github actions workflow
-* If this is the first time in a new environment, set var.dns_delegated = false in root_main.tf
-* request DNS delegation for the hosted zone
-* Once in place, set var.dns_delegated = true
-* then rerun the pipeline for that environment
-
-## USAGE - PYTHON
-
-### Deploy to Management environment
-* Install Python 3.7 or later to your laptop
-* Install AWS CLI and
-* Create a virtual environment
-```
-virtualenv -p python3 /Users/YOUR-USERNAME/venv
-```
-* Activate virtual environment
-```
-source /Users/YOUR-USERNAME/venv/python3/bin/activate
-```
-* Install dependencies
-```
-pip install boto3
-```
-* Delete Default VPCs
-```
-python delete-default-vpcs --dry_run
-python delete-default-vpcs
-```
-
-### Deploy Python to Integration and Production environments
-* Deploy using Jenkins pipeline
+## Add a new team to the repository
+* Add your team name to the input variable in [the apply workflow](./.github/workflows/apply.yml)
+* Add the role name which terraform runs with into the `delete-default-vpcs.py` script. There are existing examples for TDR and DR2.
+* For each environment you need to deploy to, you will need to set these secrets. There are descriptions of what each one is needed for in the [da-terraform-configurations](https://github.com/nationalarchives/da-terraform-configurations) repository. The project name must be the same as the name in the `apply.yml` choice field but in upper case.
+    * {PROJECT}_{ENV_NAME}_ACCOUNT_NUMBER
+    * {PROJECT}_{ENV_NAME}_DYNAMO_TABLE
+    * {PROJECT}_{ENV_NAME}_STATE_BUCKET
+    * {PROJECT}_{ENV_NAME}_TERRAFORM_EXTERNAL_ID
+    * {PROJECT}_{ENV_NAME}_TERRAFORM_ROLE
+* You will also need to set the following secrets which don't depend on the environment.
+    * {PROJECT}_EMAIL_ADDRESS
+    * {PROJECT}_MANAGEMENT_ACCOUNT
+    * {PROJECT}_SLACK_WEBHOOK
+    * {PROJECT}_WORKFLOW_PAT 
+* Set up an environment in GitHub called {project-lower-case}-{environment-lower-case} for each environment you will deploy to.
+* Run the GitHub actions apply workflow. This will deploy to the chosen environment and delete the default VPCs from each region. 
