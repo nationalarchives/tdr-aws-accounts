@@ -53,7 +53,7 @@ module "encryption_key" {
 }
 
 module "log_data_sns" {
-  source = "git::https://github.com/nationalarchives/da-terraform-modules//sns?ref=add-sns-topic-to-s3-bucket"
+  source = "git::https://github.com/nationalarchives/da-terraform-modules//sns"
   lambda_subscriptions = {
     s3_copy = module.lambda_s3_copy.lambda_arn
   }
@@ -63,7 +63,7 @@ module "log_data_sns" {
 }
 
 module "cloudtrail_s3" {
-  source      = "git::https://github.com/nationalarchives/da-terraform-modules//s3?ref=add-sns-topic-to-s3-bucket"
+  source      = "git::https://github.com/nationalarchives/da-terraform-modules//s3"
   bucket_name = local.cloudtrail_bucket
   bucket_policy = templatefile("./templates/s3/cloudtrail.json.tpl", {
     bucket_name = local.cloudtrail_bucket
@@ -82,7 +82,7 @@ module "cloudtrail" {
 }
 
 module "lambda_s3_copy" {
-  source = "git::https://github.com/nationalarchives/da-terraform-modules//lambda?ref=add-sns-topic-to-s3-bucket"
+  source = "git::https://github.com/nationalarchives/da-terraform-modules//lambda"
   plaintext_env_vars = {
     TARGET_S3_BUCKET = "${var.project}-log-data-mgmt"
   }
