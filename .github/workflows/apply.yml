@@ -12,10 +12,11 @@ permissions:
   contents: write
 jobs:
   apply:
-    uses: nationalarchives/tdr-github-actions/.github/workflows/terraform_apply.yml@main
+    uses: nationalarchives/tdr-github-actions/.github/workflows/terraform_apply.yml@TDR-2505-terraform-version-param
     with:
       repo-name: tdr-aws-accounts
       environment: ${{ github.event.inputs.environment }}
+      terraform-version: '1.5.0'
     secrets:
       MANAGEMENT_ACCOUNT: ${{ secrets.MANAGEMENT_ACCOUNT }}
       WORKFLOW_PAT: ${{ secrets.WORKFLOW_PAT }}

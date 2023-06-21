@@ -30,7 +30,7 @@ Code using each language is deployed separately, see sections below.
 
 ## TERRAFORM
 
-**Important Note**: tdr-aws-accounts uses *v1.1.3* of Terraform. Ensure that **Terraform v1.1.3** is installed before proceeding.
+**Important Note**: tdr-aws-accounts uses *v1.5.0* of Terraform. Ensure that **Terraform v1.5.0** is installed before proceeding.
 
 ### Deploy to Management environment
 * Deploy from a developer laptop
