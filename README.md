@@ -23,6 +23,10 @@ Code using each language is deployed separately, see sections below.
 ## Account level configurations - Python
 * Deletes default VPCs in all regions
 
+### GitHub actions Deploy workflow
+The deploy workflow runs terraform using the `terraform_apply` workflow in `dr2-github-actions`
+This repository is team specific but that workflow has been changed to be generic. We may eventually move this to a department level repository.
+
 ## Add a new team to the repository
 * Add your team name to the input variable in [the apply workflow](./.github/workflows/apply.yml)
 * Add the role name which terraform runs with into the `delete-default-vpcs.py` script. There are existing examples for TDR and DR2.
