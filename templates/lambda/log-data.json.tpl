@@ -39,7 +39,7 @@
         "s3:PutObject",
         "s3:PutObjectAcl"
       ],
-      "Resource": "arn:aws:s3:::tdr-log-data-mgmt/*"
+      "Resource": "arn:aws:s3:::${bucket_name}/*"
     }
   ]
 }

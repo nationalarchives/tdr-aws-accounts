@@ -8,7 +8,7 @@ module "terraform_config" {
 }
 
 module "iam" {
-  source            = "./tdr-terraform-modules/iam"
+  source            = "./iam_group"
   aws_account_level = true
   environment       = local.environment
 }
@@ -53,7 +53,7 @@ module "encryption_key" {
 }
 
 module "log_data_sns" {
-  source = "git::https://github.com/nationalarchives/da-terraform-modules//sns"
+  source = "./da-terraform-modules/sns"
   lambda_subscriptions = {
     s3_copy = module.lambda_s3_copy.lambda_arn
   }
@@ -63,7 +63,7 @@ module "log_data_sns" {
 }
 
 module "cloudtrail_s3" {
-  source      = "git::https://github.com/nationalarchives/da-terraform-modules//s3"
+  source      = "./da-terraform-modules/s3"
   bucket_name = local.cloudtrail_bucket
   bucket_policy = templatefile("./templates/s3/cloudtrail.json.tpl", {
     bucket_name = local.cloudtrail_bucket
@@ -82,14 +82,14 @@ module "cloudtrail" {
 }
 
 module "lambda_s3_copy" {
-  source = "git::https://github.com/nationalarchives/da-terraform-modules//lambda"
+  source = "./da-terraform-modules/lambda"
   plaintext_env_vars = {
     TARGET_S3_BUCKET = "${var.project}-log-data-mgmt"
   }
   function_name = "${var.project}-log-data-${local.environment}"
   handler       = "lambda_function.lambda_handler"
   policies = {
-    log_data = templatefile("./templates/lambda/log-data.json.tpl", {})
+    log_data = templatefile("./templates/lambda/log-data.json.tpl", { bucket_name = "${var.project}-log-data-${local.environment}" })
   }
   runtime = "python3.7"
   tags    = local.common_tags
@@ -101,7 +101,7 @@ module "lambda_s3_copy" {
 }
 
 module "log_data_s3" {
-  source      = "git::https://github.com/nationalarchives/da-terraform-modules//s3"
+  source      = "./da-terraform-modules/s3"
   bucket_name = "${var.project}-log-data-${local.environment}"
   bucket_policy = templatefile("./templates/s3/log-data-policy.json.tpl", {
     bucket_name        = "${var.project}-log-data-${local.environment}"
@@ -115,7 +115,7 @@ module "log_data_s3" {
 }
 
 module "athena_s3" {
-  source      = "git::https://github.com/nationalarchives/da-terraform-modules//s3"
+  source      = "./da-terraform-modules/s3"
   bucket_name = local.athena_bucket
   bucket_policy = templatefile("./templates/s3/ssl-only.json.tpl", {
     bucket_name = local.athena_bucket

@@ -1,5 +1,5 @@
 module "guardduty_s3" {
-  source      = "git::https://github.com/nationalarchives/da-terraform-modules//s3"
+  source      = "./da-terraform-modules/s3"
   bucket_name = local.guard_duty_bucket
   bucket_policy = templatefile("./templates/s3/ssl-only.json.tpl", {
     bucket_name = local.guard_duty_bucket

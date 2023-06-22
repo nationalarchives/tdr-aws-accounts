@@ -1,6 +1,6 @@
 data "archive_file" "log_data_lambda" {
   type        = "zip"
-  source_file = "./tdr-terraform-modules/lambda/functions/log-data/lambda_function.py"
+  source_file = "./templates/lambda/functions/log_data_lambda_function.py"
   output_path = "/tmp/log-data-lambda.zip"
 }
 
