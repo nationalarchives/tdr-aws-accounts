@@ -39,3 +39,4 @@ Code using each language is deployed separately, see sections below.
     * {PROJECT}_WORKFLOW_PAT 
 * Set up an environment in GitHub called {project-lower-case}-{environment-lower-case} for each environment you will deploy to.
 * Run the GitHub actions apply workflow. This will deploy to the chosen environment and delete the default VPCs from each region. 
+
