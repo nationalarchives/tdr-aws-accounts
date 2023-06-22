@@ -108,7 +108,9 @@ module "log_data_s3" {
     external_account_1 = module.terraform_config.account_numbers["intg"],
     external_account_2 = module.terraform_config.account_numbers["staging"],
     external_account_3 = module.terraform_config.account_numbers["prod"]
-    role_name          = "${var.project}-log-data-${local.environment}-role"
+    role_name_intg     = "${var.project}-log-data-intg-role"
+    role_name_staging  = "${var.project}-log-data-staging-role"
+    role_name_prod     = "${var.project}-log-data-prod-role"
   })
   create_log_bucket = false
   common_tags       = local.common_tags

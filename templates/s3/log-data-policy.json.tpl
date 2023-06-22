@@ -23,7 +23,9 @@
       "Effect": "Allow",
       "Principal": {
         "AWS": [
-          "arn:aws:iam::${external_account_1}:role/${role_name}"
+          "arn:aws:iam::${external_account_1}:role/${role_name_intg}",
+          "arn:aws:iam::${external_account_2}:role/${role_name_staging}",
+          "arn:aws:iam::${external_account_3}:role/${role_name_prod}"
         ]
       },
       "Resource": [
