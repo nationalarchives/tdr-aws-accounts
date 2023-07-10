@@ -24,7 +24,7 @@ module "route_53_zone" {
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
   common_tags           = local.common_tags
   manual_creation       = local.environment == "mgmt" || local.environment == "intg" ? true : false
-  create_hosted_zone    = false
+  create_hosted_zone    = true
 }
 
 # route53 hosted zone must already have been set up
@@ -34,7 +34,7 @@ module "ses" {
   project               = var.project
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
   hosted_zone_id        = module.route_53_zone[count.index].hosted_zone_id
-  email_address         = module.terraform_config.terraform_config["notification_email"]
+  email_address         = split("@", module.terraform_config.terraform_config["notification_email"])[0]
   #if building a new environment, uncomment the line below and replace xxxx with new workspace name
   #dns_delegated         = local.environment == "xxxx" ? false : true
 }
@@ -57,7 +57,10 @@ module "log_data_sns" {
   lambda_subscriptions = {
     s3_copy = module.lambda_s3_copy.lambda_arn
   }
-  sns_policy = templatefile("./templates/sns/log-data.json.tpl", { sns_topic_name = "${var.project}-logs-${local.environment}", account_id = data.aws_caller_identity.current.account_id })
+  sns_policy = templatefile("./templates/sns/log-data.json.tpl", {
+    sns_topic_name = "${var.project}-logs-${local.environment}",
+    account_id     = data.aws_caller_identity.current.account_id
+  })
   tags       = local.common_tags
   topic_name = "${var.project}-logs-${local.environment}"
 }
@@ -70,6 +73,9 @@ module "cloudtrail_s3" {
   })
   create_log_bucket = false
   common_tags       = local.common_tags
+  sns_topic_config = {
+    "s3:ObjectCreated:*" = module.log_data_sns.sns_arn
+  }
 }
 
 module "cloudtrail" {
@@ -89,7 +95,9 @@ module "lambda_s3_copy" {
   function_name = "${var.project}-log-data-${local.environment}"
   handler       = "lambda_function.lambda_handler"
   policies = {
-    log_data = templatefile("./templates/lambda/log-data.json.tpl", { bucket_name = "${var.project}-log-data-${local.environment}" })
+    log_data = templatefile("./templates/lambda/log-data.json.tpl", {
+      bucket_name = "${var.project}-log-data-${local.environment}"
+    })
   }
   runtime = "python3.7"
   tags    = local.common_tags
@@ -101,6 +109,7 @@ module "lambda_s3_copy" {
 }
 
 module "log_data_s3" {
+  count       = local.environment == "mgmt" ? 1 : 0
   source      = "./da-terraform-modules/s3"
   bucket_name = "${var.project}-log-data-${local.environment}"
   bucket_policy = templatefile("./templates/s3/log-data-policy.json.tpl", {
@@ -133,6 +142,9 @@ module "athena" {
   common_tags    = local.common_tags
   function       = "security_logs"
   bucket         = local.athena_bucket
-  queries        = ["tdr_cloudtrail_logs_mgmt", "create_table_tdr_cloudtrail_logs_mgmt", "tdr_flowlogs_mgmt_jenkins", "create_table_tdr_flowlogs_mgmt_jenkins", "partition_tdr_flowlogs_mgmt_jenkins"]
-  environment    = local.environment
+  queries = [
+    "tdr_cloudtrail_logs_mgmt", "create_table_tdr_cloudtrail_logs_mgmt", "tdr_flowlogs_mgmt_jenkins",
+    "create_table_tdr_flowlogs_mgmt_jenkins", "partition_tdr_flowlogs_mgmt_jenkins"
+  ]
+  environment = local.environment
 }
