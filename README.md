@@ -44,3 +44,28 @@ This repository is team specific but that workflow has been changed to be generi
 * Set up an environment in GitHub called {project-lower-case}-{environment-lower-case} for each environment you will deploy to.
 * Run the GitHub actions apply workflow. This will deploy to the chosen environment and delete the default VPCs from each region. 
 
+## Running Terraform locally
+
+**Important Note**: tdr-antivirus uses >= v1.5.0 of Terraform. Ensure that Terraform >= v1.5.0 is installed before proceeding.
+
+To run the Terraform from a local machine:
+
+1. Initialise the Terraform
+
+  The initialisation command requires two parameters to be set
+  * Terraform state bucket for the project
+  * Terraform state lock DynamoDB table for the project
+
+    ```
+    [location of project]: terraform init -backend-config="bucket={name of the state bucket}" --backend-config="dynamodb_table={state lock table}"
+    ```
+   
+2. Select the correct Terraform workspace for the project environment:
+    ```
+   [location of project]: terraform workspace select {name of workspace}
+   ```
+   
+3. Run Terraform `plan` / `apply` commands as appropriate:
+    ```
+   [location of project]: terraform {plan / apply}
+   ```
