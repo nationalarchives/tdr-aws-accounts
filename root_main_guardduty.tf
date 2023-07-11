@@ -4,10 +4,18 @@ module "guardduty_s3" {
   bucket_policy = templatefile("./templates/s3/ssl-only.json.tpl", {
     bucket_name = local.guard_duty_bucket
   })
-  create_log_bucket = false
+  logging_bucket_policy = templatefile("./templates/s3/ssl-only.json.tpl", {
+    bucket_name = "${local.guard_duty_bucket}-logs"
+  })
+  create_log_bucket = true
   common_tags       = local.common_tags
-  sns_topic_config = {
-    "s3:ObjectCreated:*" = module.log_data_sns.sns_arn
+}
+
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = "${local.guard_duty_bucket}-logs"
+  topic {
+    topic_arn = module.log_data_sns.sns_arn
+    events    = ["s3:ObjectCreated:*"]
   }
 }
 
