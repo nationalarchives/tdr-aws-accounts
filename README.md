@@ -64,7 +64,12 @@ To run the Terraform from a local machine:
     ```
    [location of project]: terraform workspace select {name of workspace}
    ```
-   
+3. For the TDR project set the following Terraform variables:
+    ```
+   [location of project]: export TF_VAR_create_domain_email=true
+   [location of project]: export TF_VAR_create_hosted_zone=true
+   ```
+
 3. Run Terraform `plan` / `apply` commands as appropriate:
     ```
    [location of project]: terraform {plan / apply}
