@@ -99,7 +99,7 @@ module "lambda_s3_copy" {
       bucket_name = "${var.project}-log-data-${local.environment}"
     })
   }
-  runtime = "python3.7"
+  runtime = "python3.9"
   tags    = local.common_tags
   lambda_invoke_permissions = {
     "sns.amazonaws.com" = module.log_data_sns.sns_arn
