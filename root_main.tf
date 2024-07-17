@@ -18,7 +18,7 @@ module "iam" {
 # terraform import module.route_53_zone.aws_route53_record.hosted_zone_ns Z4KAPRWWNC7JR_tdr-management.nationalarchives.gov.uk_NS_tdr-management
 
 module "route_53_zone" {
-  count                 = var.create_hosted_zone ? 1 : 0
+  count                 = local.create_hosted_zone ? 1 : 0
   source                = "./tdr-terraform-modules/route53"
   project               = var.project
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
@@ -29,7 +29,7 @@ module "route_53_zone" {
 
 # route53 hosted zone must already have been set up
 module "ses" {
-  count                 = var.create_domain_email ? 1 : 0
+  count                 = local.create_domain_email ? 1 : 0
   source                = "./tdr-terraform-modules/ses"
   project               = var.project
   environment_full_name = lookup(local.environment_full_name_map, local.environment)
@@ -120,16 +120,6 @@ module "log_data_s3" {
     role_name_intg     = "${var.project}-log-data-intg-role"
     role_name_staging  = "${var.project}-log-data-staging-role"
     role_name_prod     = "${var.project}-log-data-prod-role"
-  })
-  create_log_bucket = false
-  common_tags       = local.common_tags
-}
-
-module "athena_s3" {
-  source      = "./da-terraform-modules/s3"
-  bucket_name = local.athena_bucket
-  bucket_policy = templatefile("./templates/s3/ssl-only.json.tpl", {
-    bucket_name = local.athena_bucket
   })
   create_log_bucket = false
   common_tags       = local.common_tags

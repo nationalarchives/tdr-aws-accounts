@@ -1,9 +1,6 @@
 module "config_s3" {
   source      = "./da-terraform-modules/s3"
   bucket_name = local.config_bucket
-  bucket_policy = templatefile("./templates/s3/ssl-only.json.tpl", {
-    bucket_name = local.config_bucket
-  })
   logging_bucket_policy = templatefile("./templates/s3/ssl-only.json.tpl", {
     bucket_name = "${local.config_bucket}-logs"
   })
