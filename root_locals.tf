@@ -23,5 +23,8 @@ locals {
   cloudtrail_bucket = "${var.project}-cloudtrail-${local.environment}"
   athena_bucket     = "${var.project}-athena-${local.environment}"
   config_bucket     = "${var.project}-config-${local.environment}"
-  guard_duty_bucket = "${var.project}-guardduty-${local.environment}"
+
+  hosted_zone_envs    = ["intg", "staging", "prod"]
+  create_domain_email = contains(local.hosted_zone_envs, terraform.workspace) ? true : false
+  create_hosted_zone  = contains(local.hosted_zone_envs, terraform.workspace) ? true : false
 }
