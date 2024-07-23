@@ -125,6 +125,15 @@ module "log_data_s3" {
   common_tags       = local.common_tags
 }
 
+module "athena_s3" {
+  source = "./da-terraform-modules/s3"
+  count  = local.environment == "mgmt" ? 1 : 0
+
+  bucket_name       = local.athena_bucket
+  create_log_bucket = false
+  common_tags       = local.common_tags
+}
+
 module "athena" {
   source         = "./tdr-terraform-modules/athena"
   apply_resource = local.environment == "mgmt" ? true : false
