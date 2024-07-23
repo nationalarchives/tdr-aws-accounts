@@ -99,7 +99,7 @@ module "lambda_s3_copy" {
       bucket_name = "${var.project}-log-data-${local.environment}"
     })
   }
-  runtime = "python3.11"
+  runtime = "python3.10"
   tags    = local.common_tags
   lambda_invoke_permissions = {
     "sns.amazonaws.com" = module.log_data_sns.sns_arn
@@ -109,7 +109,7 @@ module "lambda_s3_copy" {
 }
 
 module "log_data_s3" {
-  count       = local.environment == "mgmt" || var.project == "dr2" ? 1 : 0
+  count       = local.environment == "mgmt" ? 1 : 0
   source      = "./da-terraform-modules/s3"
   bucket_name = "${var.project}-log-data-${local.environment}"
   bucket_policy = templatefile("./templates/s3/log-data-policy.json.tpl", {
@@ -127,7 +127,7 @@ module "log_data_s3" {
 
 module "athena_s3" {
   source = "./da-terraform-modules/s3"
-  count  = local.environment == "mgmt" ? 1 : 0
+  count  = local.environment == "mgmt" || var.project == "dr2" ? 1 : 0
 
   bucket_name       = local.athena_bucket
   create_log_bucket = false
