@@ -39,10 +39,6 @@ module "ses" {
   #dns_delegated         = local.environment == "xxxx" ? false : true
 }
 
-module "security_hub" {
-  source = "./tdr-terraform-modules/securityhub"
-}
-
 module "encryption_key" {
   source      = "./tdr-terraform-modules/kms"
   project     = var.project
