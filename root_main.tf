@@ -65,7 +65,10 @@ module "cloudtrail_s3" {
   source      = "./da-terraform-modules/s3"
   bucket_name = local.cloudtrail_bucket
   bucket_policy = templatefile("./templates/s3/cloudtrail.json.tpl", {
-    bucket_name = local.cloudtrail_bucket
+    bucket_name   = local.cloudtrail_bucket
+    aws_partition = data.aws_partition.current.id
+    aws_region    = data.aws_region.current.name
+    account_id    = data.aws_caller_identity.current.id
   })
   create_log_bucket = false
   common_tags       = local.common_tags
