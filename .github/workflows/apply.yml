@@ -24,7 +24,7 @@ jobs:
       project: ${{ github.event.inputs.project }}
       environment: ${{ github.event.inputs.environment }}
   apply:
-    uses: nationalarchives/dr2-github-actions/.github/workflows/terraform_apply.yml@main
+    uses: nationalarchives/dr2-github-actions/.github/workflows/terraform_apply.yml@0c2107a5962e16aaa2bf1056b2a10b0855d2a79d
     needs: setup
     with:
       repo-name: tdr-aws-accounts
