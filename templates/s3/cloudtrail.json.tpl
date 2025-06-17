@@ -23,8 +23,7 @@
           "AWS:SourceArn": "arn:${aws_partition}:cloudtrail:${aws_region}:${account_id}:trail/*"
         },
         "StringEquals": {
-          "s3:x-amz-acl": "bucket-owner-full-control",
-          "AWS:SourceArn": "arn:${aws_partition}:cloudtrail:${aws_region}:${account_id}:trail/*"
+          "s3:x-amz-acl": "bucket-owner-full-control"
         }
       }
     }
