@@ -19,6 +19,9 @@
       "Action": "s3:PutObject",
       "Resource": "arn:aws:s3:::${bucket_name}/*",
       "Condition": {
+        "StringLike": {
+          "AWS:SourceArn": "arn:${aws_partition}:cloudtrail:${aws_region}:${account_id}:trail/*"
+        },
         "StringEquals": {
           "s3:x-amz-acl": "bucket-owner-full-control"
         }
