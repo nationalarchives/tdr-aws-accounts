@@ -46,7 +46,7 @@ This repository is team specific but that workflow has been changed to be generi
 
 ## Running Terraform locally
 
-**Important Note**: tdr-antivirus uses >= v1.5.0 of Terraform. Ensure that Terraform >= v1.5.0 is installed before proceeding.
+**Important Note**: Ensure that Terraform >= v1.12.2 is installed before proceeding.
 
 To run the Terraform from a local machine:
 
@@ -57,7 +57,7 @@ To run the Terraform from a local machine:
   * Terraform state lock DynamoDB table for the project
 
     ```
-    [location of project]: terraform init -backend-config="bucket={name of the state bucket}" --backend-config="dynamodb_table={state lock table}"
+    [location of project]: terraform init
     ```
    
 2. Select the correct Terraform workspace for the project environment:
