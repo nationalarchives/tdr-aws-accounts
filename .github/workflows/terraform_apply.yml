@@ -24,10 +24,6 @@ on:
         required: true
       TERRAFORM_ROLE:
         required: true
-      STATE_BUCKET:
-        required: true
-      DYNAMO_TABLE:
-        required: true
 jobs:
   plan:
     runs-on: ubuntu-latest
