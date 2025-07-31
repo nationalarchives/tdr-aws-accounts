@@ -10,5 +10,4 @@ jobs:
     secrets:
       TERRAFORM_ROLE: ${{ secrets.DR2_INTG_TERRAFORM_ROLE }}
       WORKFLOW_TOKEN: ${{ secrets.DR2_WORKFLOW_PAT }}
-      STATE_BUCKET: ${{ secrets.DR2_MGMT_STATE_BUCKET }}
-      DYNAMO_TABLE: ${{ secrets.DR2_MGMT_DYNAMO_TABLE }}
+      
