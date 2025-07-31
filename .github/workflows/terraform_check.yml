@@ -1,6 +1,5 @@
 # This was copied from dr2-github-actions 75a7f13
 # and then modifed
-Browse files
 name: DR2 Run git secrets and tests
 on:
   workflow_call:
@@ -54,7 +53,7 @@ jobs:
         run: terraform fmt -check --recursive
       - name: Terraform Init
         id: init
-        run: terraform init -reconfigure
+        run: terraform init 
       - name: Select integration workspace
         if: inputs.use-workspace
         run: terraform workspace select intg
