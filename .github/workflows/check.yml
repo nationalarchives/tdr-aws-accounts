@@ -6,8 +6,7 @@ permissions:
   contents: write
 jobs:
   check:
-    uses: .
-    /.github/workflows/terraform_check.yml
+    uses: ./.github/workflows/terraform_check.yml
     secrets:
       TERRAFORM_ROLE: ${{ secrets.DR2_INTG_TERRAFORM_ROLE }}
       WORKFLOW_TOKEN: ${{ secrets.DR2_WORKFLOW_PAT }}
