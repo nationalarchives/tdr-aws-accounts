@@ -7,13 +7,6 @@ on:
         description: The environment to deploy against.
         type: string
         default: intg
-      project:
-        required: true
-        description: The project to run this for
-        type: choice
-        options:
-          - tdr
-          - dr2
 permissions:
   id-token: write
   contents: write
@@ -21,7 +14,7 @@ jobs:
   setup:
     uses: nationalarchives/dr2-github-actions/.github/workflows/set_terraform_var_names.yml@main
     with:
-      project: ${{ github.event.inputs.project }}
+      project: tdr
       environment: ${{ github.event.inputs.environment }}
   apply:
     uses: nationalarchives/dr2-github-actions/.github/workflows/terraform_apply.yml@2bf1a1c6568f8cf43db6582f78161ef74c8adcd9
@@ -29,7 +22,7 @@ jobs:
     with:
       repo-name: tdr-aws-accounts
       environment: ${{ github.event.inputs.environment }}
-      project: ${{ github.event.inputs.project }}
+      project: tdr
     secrets:
       WORKFLOW_TOKEN: ${{ secrets[needs.setup.outputs.workflow-token] }}
       ACCOUNT_NUMBER: ${{ secrets[needs.setup.outputs.account-number] }}
@@ -53,7 +46,7 @@ jobs:
           role-session-name: TerraformRole
       - run: |
           pip install boto3 
-          python ./python/delete-default-vpcs.py --account_number=${{ secrets[needs.setup.outputs.account-number] }} --stage=${{ github.event.inputs.environment }} --deployment_type=github  --external_id=${{ secrets[needs.setup.outputs.terraform-external-id] }} --project ${{ github.event.inputs.project }}
+          python ./python/delete-default-vpcs.py --account_number=${{ secrets[needs.setup.outputs.account-number] }} --stage=${{ github.event.inputs.environment }} --deployment_type=github  --external_id=${{ secrets[needs.setup.outputs.terraform-external-id] }} --project tdr
       - uses: nationalarchives/tdr-github-actions/.github/actions/slack-send@main
         with:
           message: "${{ inputs.environment }} default VPCs deleted in all regions"
