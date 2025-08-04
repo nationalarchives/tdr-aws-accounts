@@ -1,6 +1,4 @@
-# This was copied from dr2-github-actions 75a7f13
-# and then modifed
-name: DR2 Run git secrets and tests
+name: Run git secrets and tests
 on:
   workflow_call:
     inputs:
@@ -46,13 +44,4 @@ jobs:
           terraform_version: 1.12.2
       - name: Terraform Format
         id: fmt
-        run: terraform fmt -check --recursive 
-      #- name: Terraform Init
-      #  id: init
-      #  #run: terraform init
-      #- name: Select integration workspace
-      #  if: inputs.use-workspace
-      #  run: terraform workspace select intg
-      #- name: Terraform Validate
-      #  id: validate
-      #  run: terraform validate
+        run: terraform fmt -check --recursive
