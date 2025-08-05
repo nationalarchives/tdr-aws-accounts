@@ -7,13 +7,6 @@ on:
         description: The environment to deploy against.
         type: string
         default: intg
-      project:
-        required: true
-        description: The project to run this for
-        type: choice
-        options:
-          - tdr
-          - dr2
 permissions:
   id-token: write
   contents: write
@@ -21,40 +14,17 @@ jobs:
   setup:
     uses: nationalarchives/dr2-github-actions/.github/workflows/set_terraform_var_names.yml@main
     with:
-      project: ${{ github.event.inputs.project }}
+      project: tdr
       environment: ${{ github.event.inputs.environment }}
   apply:
-    uses: nationalarchives/dr2-github-actions/.github/workflows/terraform_apply.yml@2bf1a1c6568f8cf43db6582f78161ef74c8adcd9
+    uses: ./.github/workflows/terraform_apply.yml
     needs: setup
     with:
       repo-name: tdr-aws-accounts
       environment: ${{ github.event.inputs.environment }}
-      project: ${{ github.event.inputs.project }}
+      project: tdr
     secrets:
       WORKFLOW_TOKEN: ${{ secrets[needs.setup.outputs.workflow-token] }}
       ACCOUNT_NUMBER: ${{ secrets[needs.setup.outputs.account-number] }}
       SLACK_WEBHOOK: ${{ secrets[needs.setup.outputs.slack-webhook] }}
       TERRAFORM_ROLE: ${{ secrets[needs.setup.outputs.terraform-role] }}
-      STATE_BUCKET: ${{ secrets[needs.setup.outputs.state-bucket] }}
-      DYNAMO_TABLE: ${{ secrets[needs.setup.outputs.dynamo-table] }}
-  delete-vpc:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          submodules: recursive
-          token: ${{ secrets[needs.setup.outputs.workflow-token] }}
-      - name: Configure AWS credentials for Lambda
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722
-        with:
-          role-to-assume: ${{ secrets[needs.setup.outputs.terraform-role] }}
-          aws-region: eu-west-2
-          role-session-name: TerraformRole
-      - run: |
-          pip install boto3 
-          python ./python/delete-default-vpcs.py --account_number=${{ secrets[needs.setup.outputs.account-number] }} --stage=${{ github.event.inputs.environment }} --deployment_type=github  --external_id=${{ secrets[needs.setup.outputs.terraform-external-id] }} --project ${{ github.event.inputs.project }}
-      - uses: nationalarchives/tdr-github-actions/.github/actions/slack-send@main
-        with:
-          message: "${{ inputs.environment }} default VPCs deleted in all regions"
-          slack-url: ${{ secrets[needs.setup.outputs.slack-webhook] }}

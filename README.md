@@ -27,6 +27,8 @@ Code using each language is deployed separately, see sections below.
 The deploy workflow runs terraform using the `terraform_apply` workflow in `dr2-github-actions`
 This repository is team specific but that workflow has been changed to be generic. We may eventually move this to a department level repository.
 
+**The apply workflow does not work for the management stack/workspace** See Running Terraform locally section below and use the mgmt workspace
+
 ## Add a new team to the repository
 * Add your team name to the input variable in [the apply workflow](./.github/workflows/apply.yml)
 * Add the role name which terraform runs with into the `delete-default-vpcs.py` script. There are existing examples for TDR and DR2.
@@ -45,27 +47,31 @@ This repository is team specific but that workflow has been changed to be generi
 * Run the GitHub actions apply workflow. This will deploy to the chosen environment and delete the default VPCs from each region. 
 
 ## Running Terraform locally
+**Important Note**: Ensure that Terraform >= v1.12.2 is installed before proceeding.
 
-**Important Note**: tdr-antivirus uses >= v1.5.0 of Terraform. Ensure that Terraform >= v1.5.0 is installed before proceeding.
+1. Add AWS credentials to the local credential store (~/.aws/credentials) for the TDR management account:
 
-To run the Terraform from a local machine:
+   ```
+   ... other credentials ...
+   [<a profile that points to management>]
+   sso_account_id  = ... management account number  ...
+   sso_role_name  = ... management role ...
+   ...
 
-1. Initialise the Terraform
+   ```
 
-  The initialisation command requires two parameters to be set
-  * Terraform state bucket for the project
-  * Terraform state lock DynamoDB table for the project
+2. Initialise the Terraform
 
     ```
-    [location of project]: terraform init -backend-config="bucket={name of the state bucket}" --backend-config="dynamodb_table={state lock table}"
+    [location of project]: terraform init
     ```
    
-2. Select the correct Terraform workspace for the project environment:
+3. Select the correct Terraform workspace for the project environment:
     ```
    [location of project]: terraform workspace select {name of workspace}
    ```
 
-3. Run Terraform `plan` / `apply` commands as appropriate:
+4. Run Terraform `plan` / `apply` commands as appropriate:
     ```
    [location of project]: terraform {plan / apply}
    ```
