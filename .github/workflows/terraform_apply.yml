@@ -32,18 +32,18 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           repository: nationalarchives/${{ inputs.repo-name }}
           submodules: recursive
           token: ${{ secrets.WORKFLOW_TOKEN }}
       - name: Configure AWS credentials for Lambda
-        uses: aws-actions/configure-aws-credentials@a03048d87541d1d9fcf2ecf528a4a65ba9bd7838
+        uses: aws-actions/configure-aws-credentials@a03048d87541d1d9fcf2ecf528a4a65ba9bd7838 # v5.0.0
         with:
           role-to-assume: ${{ secrets.TERRAFORM_ROLE }}
           aws-region: eu-west-2
           role-session-name: TerraformRole
-      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
       - name: Terraform Plan
         id: plan
         env:
@@ -61,7 +61,7 @@ jobs:
           terraform plan -no-color > out.plan 2>&1 || EXIT_CODE=$?
           python $GITHUB_WORKSPACE/.github/scripts/logs.py out.plan "${{ github.run_id }}${{ github.run_attempt }}" ${{ github.event.inputs.environment }}
           exit $EXIT_CODE
-      - uses: nationalarchives/dr2-github-actions/.github/actions/slack-send@main
+      - uses: nationalarchives/dr2-github-actions/.github/actions/slack-send@3b41fff1001c61b53cb3336bb7175419fb8693a3
         with:
           message: |
             :book: Terraform plan ready for repository ${{ inputs.repo-name }} environment ${{ inputs.environment }}
@@ -78,18 +78,18 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           repository: nationalarchives/${{ inputs.repo-name }}
           submodules: recursive
           token: ${{ secrets.WORKFLOW_TOKEN }}
       - name: Configure AWS credentials for Lambda
-        uses: aws-actions/configure-aws-credentials@a03048d87541d1d9fcf2ecf528a4a65ba9bd7838
+        uses: aws-actions/configure-aws-credentials@a03048d87541d1d9fcf2ecf528a4a65ba9bd7838 # v5.0.0
         with:
           role-to-assume: ${{ secrets.TERRAFORM_ROLE }}
           aws-region: eu-west-2
           role-session-name: TerraformRole
-      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
       - name: Run apply
         env:
           GITHUB_OWNER: nationalarchives
@@ -107,7 +107,7 @@ jobs:
           python $GITHUB_WORKSPACE/.github/scripts/logs.py out.apply "${{ github.run_id }}${{ github.run_attempt }}1" ${{ github.event.inputs.environment }}
           exit $EXIT_CODE
       - id: next-tag
-        uses: nationalarchives/dr2-github-actions/.github/actions/get-next-version@main
+        uses: nationalarchives/dr2-github-actions/.github/actions/get-next-version@3b41fff1001c61b53cb3336bb7175419fb8693a3
         with:
           repo-name: ${{ inputs.repo-name }}
       - run: |
@@ -117,12 +117,12 @@ jobs:
           git push -f origin release-${{ inputs.environment }}
       - name: Send failure message
         if: failure()
-        uses: nationalarchives/dr2-github-actions/.github/actions/slack-send@main
+        uses: nationalarchives/dr2-github-actions/.github/actions/slack-send@3b41fff1001c61b53cb3336bb7175419fb8693a3
         with:
           message: ":warning: ${{ inputs.repo-name }} deploy failed for ${{ inputs.environment }}"
           slack-url: ${{ secrets.SLACK_WEBHOOK }}
       - name: Send success message
-        uses: nationalarchives/dr2-github-actions/.github/actions/slack-send@main
+        uses: nationalarchives/dr2-github-actions/.github/actions/slack-send@3b41fff1001c61b53cb3336bb7175419fb8693a3
         with:
           message: ":white_check_mark: ${{ inputs.repo-name }} deploy successful for ${{ inputs.environment }}"
           slack-url: ${{ secrets.SLACK_WEBHOOK }}
