@@ -39,14 +39,14 @@ module "ses" {
   #dns_delegated         = local.environment == "xxxx" ? false : true
 }
 
-# module "encryption_key" {
-#   source      = "./tdr-terraform-modules/kms"
-#   project     = var.project
-#   environment = local.environment
-#   common_tags = local.common_tags
-#   function    = "account"
-#   key_policy  = "cloudtrail"
-# }
+module "encryption_key" {
+  source      = "./tdr-terraform-modules/kms"
+  project     = var.project
+  environment = local.environment
+  common_tags = local.common_tags
+  function    = "account"
+  key_policy  = "cloudtrail"
+}
 
 # module "log_data_sns" {
 #   source = "./da-terraform-modules/sns"
