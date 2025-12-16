@@ -7,37 +7,37 @@ module "terraform_config" {
   project = var.project
 }
 
-module "iam" {
-  source            = "./iam_group"
-  aws_account_level = true
-  environment       = local.environment
-}
+# module "iam" {
+#   source            = "./iam_group"
+#   aws_account_level = true
+#   environment       = local.environment
+# }
 
 # if the hosted zone has already been created manually, before applying terraform, import to state file using e.g.:
 # terraform import module.route_53_zone.aws_route53_zone.hosted_zone Z4KAPRWWNC7JR
 # terraform import module.route_53_zone.aws_route53_record.hosted_zone_ns Z4KAPRWWNC7JR_tdr-management.nationalarchives.gov.uk_NS_tdr-management
 
-module "route_53_zone" {
-  count                 = local.create_hosted_zone ? 1 : 0
-  source                = "./tdr-terraform-modules/route53"
-  project               = var.project
-  environment_full_name = lookup(local.environment_full_name_map, local.environment)
-  common_tags           = local.common_tags
-  manual_creation       = local.environment == "mgmt" || local.environment == "intg" ? true : false
-  create_hosted_zone    = true
-}
+# module "route_53_zone" {
+#   count                 = local.create_hosted_zone ? 1 : 0
+#   source                = "./tdr-terraform-modules/route53"
+#   project               = var.project
+#   environment_full_name = lookup(local.environment_full_name_map, local.environment)
+#   common_tags           = local.common_tags
+#   manual_creation       = local.environment == "mgmt" || local.environment == "intg" ? true : false
+#   create_hosted_zone    = true
+# }
 
 # route53 hosted zone must already have been set up
-module "ses" {
-  count                 = local.create_domain_email ? 1 : 0
-  source                = "./tdr-terraform-modules/ses"
-  project               = var.project
-  environment_full_name = lookup(local.environment_full_name_map, local.environment)
-  hosted_zone_id        = module.route_53_zone[count.index].hosted_zone_id
-  email_address         = split("@", module.terraform_config.terraform_config["notification_email"])[0]
-  #if building a new environment, uncomment the line below and replace xxxx with new workspace name
-  #dns_delegated         = local.environment == "xxxx" ? false : true
-}
+# module "ses" {
+#   count                 = local.create_domain_email ? 1 : 0
+#   source                = "./tdr-terraform-modules/ses"
+#   project               = var.project
+#   environment_full_name = lookup(local.environment_full_name_map, local.environment)
+#   hosted_zone_id        = module.route_53_zone[count.index].hosted_zone_id
+#   email_address         = split("@", module.terraform_config.terraform_config["notification_email"])[0]
+#   #if building a new environment, uncomment the line below and replace xxxx with new workspace name
+#   #dns_delegated         = local.environment == "xxxx" ? false : true
+# }
 
 # module "encryption_key" {
 #   source      = "./tdr-terraform-modules/kms"
