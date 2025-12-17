@@ -1,0 +1,30 @@
+{
+  "Rules": [
+    {
+      "Expiration": {
+        "Days": 1
+      },
+      "ID": "delete_all",
+      "Filter": {
+        "Prefix": ""
+      },
+      "Status": "Enabled",
+      "NoncurrentVersionExpiration": {
+        "NoncurrentDays": 1
+      },
+      "AbortIncompleteMultipartUpload": {
+        "DaysAfterInitiation": 1
+      }
+    },
+    {
+      "Expiration": {
+        "ExpiredObjectDeleteMarker": true
+      },
+      "ID": "delete_all_delete_markers",
+      "Filter": {
+        "Prefix": ""
+      },
+      "Status": "Enabled"
+    }
+  ]
+}
